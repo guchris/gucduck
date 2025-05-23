@@ -35,7 +35,9 @@ export function NavBar() {
   return (
     <div className="p-4">
       <Menubar className="flex w-full items-center">
-        <span className="text-base font-bold px-3 select-none">gucduck</span>
+        <Link href="/" className="text-base font-bold px-3 select-none cursor-pointer hover:opacity-80 transition-opacity" style={{ textDecoration: 'none', color: 'inherit' }}>
+          gucduck
+        </Link>
         <MenubarMenu>
           <MenubarTrigger>About</MenubarTrigger>
           <MenubarContent>
