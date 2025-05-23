@@ -1,17 +1,13 @@
 "use client"
 
+// React Imports
 import React from "react"
-import {
-  Menubar,
-  MenubarContent,
-  MenubarItem,
-  MenubarMenu,
-  MenubarSeparator,
-  MenubarSub,
-  MenubarSubContent,
-  MenubarSubTrigger,
-  MenubarTrigger,
-} from "@/components/ui/menubar";
+
+// Next Imports
+import Link from "next/link"
+
+// Shadcn Imports
+import { Menubar, MenubarContent, MenubarItem, MenubarMenu, MenubarSeparator, MenubarSub, MenubarSubContent, MenubarSubTrigger, MenubarTrigger } from "@/components/ui/menubar"
 
 function useCurrentDateTime() {
   const [now, setNow] = React.useState(new Date());
@@ -73,7 +69,9 @@ export function NavBar() {
         <MenubarMenu>
           <MenubarTrigger>Food</MenubarTrigger>
           <MenubarContent>
-            <MenubarItem>Sunday Suppers</MenubarItem>
+            <MenubarItem asChild>
+              <Link href="/food/sunday-suppers">Sunday Suppers</Link>
+            </MenubarItem>
             <MenubarItem>Restaurant Reviews</MenubarItem>
             <MenubarItem>Recipes</MenubarItem>
           </MenubarContent>
