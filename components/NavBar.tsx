@@ -62,11 +62,12 @@ export function NavBar() {
         <MenubarMenu>
           <MenubarTrigger>Projects</MenubarTrigger>
           <MenubarContent>
-            <MenubarItem>happns</MenubarItem>
-            <MenubarItem>worn</MenubarItem>
-            <MenubarItem>Stellar Effects</MenubarItem>
-            <MenubarItem>HLR</MenubarItem>
             <MenubarItem>Brews & Bites</MenubarItem>
+            <MenubarItem disabled>Chris' Corner</MenubarItem>
+            <MenubarItem>Etsy: HLR</MenubarItem>
+            <MenubarItem>Happns</MenubarItem>
+            <MenubarItem>Stellar Effects</MenubarItem>
+            <MenubarItem>Worn</MenubarItem>
           </MenubarContent>
         </MenubarMenu>
         <MenubarMenu>
@@ -75,13 +76,6 @@ export function NavBar() {
             <MenubarItem>Sunday Suppers</MenubarItem>
             <MenubarItem>Restaurant Reviews</MenubarItem>
             <MenubarItem>Recipes</MenubarItem>
-          </MenubarContent>
-        </MenubarMenu>
-        <MenubarMenu>
-          <MenubarTrigger>Travel</MenubarTrigger>
-          <MenubarContent>
-            <MenubarItem>List</MenubarItem>
-            <MenubarItem>Guides</MenubarItem>
           </MenubarContent>
         </MenubarMenu>
         <span className="flex-1" />
