@@ -4,13 +4,11 @@ import { Badge } from "@/components/ui/badge";
 
 export default function SundaySuppersPage() {
   return (
-    <div className="min-h-screen flex flex-col">
-      <header className="w-full">
+    <div className="min-h-screen flex flex-col max-w-screen-xl mx-auto p-4 gap-4">
         <NavBar />
-      </header>
 
-      <main className="flex-1 flex flex-col items-center p-4 gap-4">
-        <Card className="w-full rounded-lg shadow-none">
+      <main className="flex-1 flex flex-col items-center gap-4">
+        <Card className="w-full rounded-none shadow-none border-dashed border-gray-300">
           <CardHeader className="items-start p-4">
             <CardTitle className="text-lg font-bold text-left">Sunday Suppers</CardTitle>
             <CardDescription className="text-sm text-left mt-2">
@@ -19,7 +17,7 @@ export default function SundaySuppersPage() {
             </CardDescription>
           </CardHeader>
         </Card>
-        <Card className="w-full rounded-lg shadow-none">
+        {/* <Card className="w-full rounded-lg shadow-none">
           <CardHeader className="items-start p-4">
             <CardTitle className="text-lg font-bold text-left">Scoring System</CardTitle>
             <CardDescription className="text-sm text-left">
@@ -82,7 +80,7 @@ export default function SundaySuppersPage() {
               </Card>
             </div>
           </CardContent>
-        </Card>
+        </Card> */}
       </main>
     </div>
   );
