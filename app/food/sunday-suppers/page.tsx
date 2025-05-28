@@ -6,17 +6,17 @@ const suppers = [
   {
     title: "Cold Soba Noodles with Cucumber Salad",
     date: "Jun 25, 2024",
-    score: 41.0,
+    score: 41.00,
   },
   {
     title: "Khachapuri Cheese Bread",
     date: "Jan 21, 2024",
-    score: 46.0,
+    score: 46.00,
   },
   {
     title: "Crispy Gochujang Tofu",
     date: "Dec 10, 2023",
-    score: 44.0,
+    score: 44.00,
   },
 ];
 
@@ -106,20 +106,24 @@ export default function SundaySuppersPage() {
               <div
                 key={supper.title}
                 className={[
-                  "flex items-center px-4 py-3 transition-colors duration-200 cursor-pointer group",
+                  "flex items-start transition-colors duration-200 cursor-pointer group",
                   i !== suppers.length - 1 && "border-b border-dashed border-gray-300",
                   "hover:bg-black hover:text-white"
                 ].filter(Boolean).join(" ")}
               >
-                <div className="w-16 h-16 bg-gray-200 dark:bg-neutral-800 rounded mr-4 flex-shrink-0 group-hover:bg-white/20 transition-colors duration-200" />
-                <div className="flex-1 min-w-0">
-                  <div className="font-semibold text-base truncate">{supper.title}</div>
-                  <div className="text-sm text-muted-foreground mt-1 group-hover:text-white/80 transition-colors duration-200 lg:hidden">{supper.date}</div>
+                <div className="flex flex-row items-center gap-x-4 flex-1 min-w-0">
+                  <div className="w-16 h-16 bg-gray-200 dark:bg-neutral-800 flex-shrink-0 group-hover:bg-white/20 transition-colors duration-200" />
+                  <div className="flex flex-col justify-center min-w-0 w-full mr-4">
+                    <div className="font-semibold text-base truncate">{supper.title}</div>
+                    <div className="flex flex-row items-center mt-1 w-full">
+                      <div className="text-sm text-muted-foreground group-hover:text-white/80 transition-colors duration-200 truncate">
+                        {supper.date}
+                      </div>
+                      <div className="flex-1" />
+                      <div className="text-right font-semibold text-sm tabular-nums ml-4">{supper.score.toFixed(2)}</div>
+                    </div>
+                  </div>
                 </div>
-                <div className="hidden lg:block ml-4 flex-shrink-0 font-semibold text-lg tabular-nums text-muted-foreground group-hover:text-white/80 transition-colors duration-200" style={{ minWidth: '9.5rem' }}>
-                  {supper.date}
-                </div>
-                <div className="ml-4 flex-shrink-0 text-right font-bold text-lg tabular-nums">{supper.score.toFixed(1)}</div>
               </div>
             ))}
           </CardContent>
