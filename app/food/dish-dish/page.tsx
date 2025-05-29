@@ -14,15 +14,24 @@ import { Badge } from "@/components/ui/badge";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
-// Helper to sum all number values in the 'scores' object (across all categories)
-function sumScores(scores: any): number {
+type DishScores = {
+  [category: string]: { [index: string]: number };
+};
+
+type Dish = {
+  id: string;
+  name: string;
+  date: string;
+  scores: DishScores;
+};
+
+function sumScores(scores: DishScores): number {
   if (!scores) return 0;
-  return Object.values(scores).reduce((total: number, category: unknown) => {
-    if (typeof category !== 'object' || category === null) return total;
+  return Object.values(scores).reduce((total, category) => {
     return (
       total +
-      Object.values(category as Record<string, unknown>).reduce(
-        (catTotal: number, val: unknown) => catTotal + Number(val),
+      Object.values(category).reduce(
+        (catTotal, val) => catTotal + Number(val),
         0
       )
     );
@@ -31,14 +40,14 @@ function sumScores(scores: any): number {
 
 export default function DishDishPage() {
   // State for fetched dishes and loading indicator
-  const [dishes, setDishes] = useState<any[]>([]);
+  const [dishes, setDishes] = useState<Dish[]>([]);
   const [loading, setLoading] = useState(true);
 
   // Fetch dishes from Firestore on mount
   useEffect(() => {
     async function fetchDishes() {
       const querySnapshot = await getDocs(collection(db, "dish-dish"));
-      setDishes(querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+      setDishes(querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Dish)));
       setLoading(false);
     }
     fetchDishes();
