@@ -1,38 +1,61 @@
+"use client"
+
+// React Imports
+import { useEffect, useState } from "react";
+
+// Component Imports
 import { NavBar } from "@/components/NavBar";
+
+// Shadcn Imports
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
-const suppers = [
-  {
-    title: "Cold Soba Noodles with Cucumber Salad",
-    date: "Jun 25, 2024",
-    score: 41.00,
-  },
-  {
-    title: "Khachapuri Cheese Bread",
-    date: "Jan 21, 2024",
-    score: 46.00,
-  },
-  {
-    title: "Crispy Gochujang Tofu",
-    date: "Dec 10, 2023",
-    score: 44.00,
-  },
-];
+// Firebase Imports
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "@/lib/firebase";
+
+// Helper to sum all number values in the 'scores' object (across all categories)
+function sumScores(scores: any): number {
+  if (!scores) return 0;
+  return Object.values(scores).reduce((total: number, category: unknown) => {
+    if (typeof category !== 'object' || category === null) return total;
+    return (
+      total +
+      Object.values(category as Record<string, unknown>).reduce(
+        (catTotal: number, val: unknown) => catTotal + Number(val),
+        0
+      )
+    );
+  }, 0);
+}
 
 export default function DishDishPage() {
+  // State for fetched dishes and loading indicator
+  const [dishes, setDishes] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch dishes from Firestore on mount
+  useEffect(() => {
+    async function fetchDishes() {
+      const querySnapshot = await getDocs(collection(db, "dish-dish"));
+      setDishes(querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+      setLoading(false);
+    }
+    fetchDishes();
+  }, []);
+
   return (
-    <div className="min-h-screen flex flex-col gap-4 p-4">
+    <div className="min-h-screen flex flex-col max-w-screen-xl mx-auto gap-4 p-4">
       <header className="w-full">
         <NavBar />
       </header>
       <main className="flex-1 flex flex-col items-center gap-4">
         <Card className="w-full rounded-none shadow-none border-dashed border-gray-300">
           <CardHeader className="items-start p-4">
-            <CardTitle className="text-lg md:text-3xl font-bold text-left">Dish Dish</CardTitle>
+            <CardTitle className="text-lg font-bold text-left">Dish Dish</CardTitle>
             <CardDescription className="text-left mt-2">
-              Dish Dish is me and my best friend Anjuli’s favorite tradition. Every so often, we pick a recipe from social media, split the grocery list, and meet up at my place to cook, catch up, and laugh about everything and nothing.<br /><br />
-              It’s not just about the food (though that part’s great) — it’s our way of making time for each other. We always snap pics of our creations, eat way too much, and then rate the dish like we’re judges on a cooking show.
+              Dish Dish is me and my best friend Anjuli's favorite tradition. Every so often, we pick a recipe from social media, split the grocery list, and meet up at my place to cook, catch up, and laugh about everything and nothing.<br /><br />
+              It's not just about the food (though that part's great) — it's our way of making time for each other. We always snap pics of our creations, eat way too much, and then rate the dish like we're judges on a cooking show.
             </CardDescription>
           </CardHeader>
         </Card>
@@ -98,25 +121,33 @@ export default function DishDishPage() {
         </Card>
         <Card className="w-full rounded-none shadow-none border-dashed border-gray-300">
           <CardContent className="p-0">
-            {suppers.map((supper, i) => (
+            {/* Loading and empty states */}
+            {loading ? (
+              <div className="text-center py-8 text-muted-foreground">Loading...</div>
+            ) : dishes.length === 0 ? (
+              <div className="text-center py-8 text-muted-foreground">No dishes found.</div>
+            ) : dishes.map((dish, i) => (
               <div
-                key={supper.title}
+                key={dish.id}
                 className={[
                   "flex items-start transition-colors duration-200 cursor-pointer group",
-                  i !== suppers.length - 1 && "border-b border-dashed border-gray-300",
+                  i !== dishes.length - 1 && "border-b border-dashed border-gray-300",
                   "hover:bg-black hover:text-white"
                 ].filter(Boolean).join(" ")}
               >
+                {/* Image placeholder and content */}
                 <div className="flex flex-row items-center gap-x-4 flex-1 min-w-0">
                   <div className="w-16 h-16 bg-gray-200 dark:bg-neutral-800 flex-shrink-0 group-hover:bg-white/20 transition-colors duration-200" />
                   <div className="flex flex-col justify-center min-w-0 w-full mr-4">
-                    <div className="font-semibold text-base truncate">{supper.title}</div>
+                    <div className="font-semibold text-base truncate">{dish.name}</div>
                     <div className="flex flex-row items-center mt-1 w-full">
                       <div className="text-sm text-muted-foreground group-hover:text-white/80 transition-colors duration-200 truncate">
-                        {supper.date}
+                        {dish.date}
                       </div>
                       <div className="flex-1" />
-                      <div className="text-right font-semibold text-sm tabular-nums ml-4">{supper.score.toFixed(2)}</div>
+                      <div className="text-right font-semibold text-sm tabular-nums ml-4">
+                        {sumScores(dish.scores).toFixed(2)}
+                      </div>
                     </div>
                   </div>
                 </div>
