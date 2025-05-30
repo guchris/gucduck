@@ -246,9 +246,9 @@ export default function DishDishPage() {
           <CardContent className="p-0">
             {/* Loading and empty states */}
             {loading ? (
-              <div className="text-center py-8 text-muted-foreground">Loading...</div>
+              <div className="text-center py-4 text-muted-foreground">Loading...</div>
             ) : filteredDishes.length === 0 ? (
-              <div className="text-center py-8 text-muted-foreground">No dishes found.</div>
+              <div className="text-center py-4 text-muted-foreground">No dishes found.</div>
             ) : filteredDishes.map((dish, i) => (
               <div
                 key={dish.id}
