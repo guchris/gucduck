@@ -14,6 +14,9 @@ import { Badge } from "@/components/ui/badge";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
+// Lucide Imports
+import { Plus, Minus } from "lucide-react";
+
 type DishScores = {
   [category: string]: { [index: string]: number };
 };
@@ -42,6 +45,9 @@ export default function DishDishPage() {
   // State for fetched dishes and loading indicator
   const [dishes, setDishes] = useState<Dish[]>([]);
   const [loading, setLoading] = useState(true);
+  // Collapse state for mobile cards
+  const [introOpen, setIntroOpen] = useState(false);
+  const [scoringOpen, setScoringOpen] = useState(false);
 
   // Fetch dishes from Firestore on mount
   useEffect(() => {
@@ -53,79 +59,119 @@ export default function DishDishPage() {
     fetchDishes();
   }, []);
 
+  // Helper: get first paragraph from a string
+  function getFirstParagraph(text: string) {
+    return text.split(/<br\s*\/?><br\s*\/?/)[0];
+  }
+
+  // Card descriptions as strings for easy splitting
+  const introDescription = `Dish Dish is me and my best friend Anjuli's favorite tradition. Every so often, we pick a recipe from social media, split the grocery list, and meet up at my place to cook, catch up, and laugh about everything and nothing.<br /><br />It's not just about the food (though that part's great) — it's our way of making time for each other. We always snap pics of our creations, eat way too much, and then rate the dish like we're judges on a cooking show.`;
+  const scoringDescription = `A dish's score is derived from the combined points assigned by both Anjuli and me in the following categories.`;
+
   return (
     <div className="min-h-screen flex flex-col max-w-screen-xl mx-auto gap-4 p-4">
       <header className="w-full">
         <NavBar />
       </header>
       <main className="flex-1 flex flex-col items-center gap-4">
+        {/* Dish Dish Card - Collapsible on all screens */}
         <Card className="w-full rounded-none shadow-none border-dashed border-gray-300">
-          <CardHeader className="items-start p-4">
-            <CardTitle className="text-lg font-bold text-left">Dish Dish</CardTitle>
-            <CardDescription className="text-left mt-2">
-              Dish Dish is me and my best friend Anjuli's favorite tradition. Every so often, we pick a recipe from social media, split the grocery list, and meet up at my place to cook, catch up, and laugh about everything and nothing.<br /><br />
-              It's not just about the food (though that part's great) — it's our way of making time for each other. We always snap pics of our creations, eat way too much, and then rate the dish like we're judges on a cooking show.
-            </CardDescription>
-          </CardHeader>
-        </Card>
-        <Card className="w-full rounded-none shadow-none border-dashed border-gray-300">
-          <CardHeader className="items-start p-4">
-            <CardTitle className="text-lg font-bold text-left">Scoring System</CardTitle>
-            <CardDescription className="text-sm text-left">
-              A dish's score is derived from the combined points assigned by both Anjuli and me in the following categories.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="px-4 pt-0">
-            <div className="grid gap-4 md:grid-cols-2">
-              <Card className="rounded-none shadow-none border-dashed border-gray-300">
-                <CardHeader className="flex-row items-center gap-2 p-4 pb-0">
-                  <CardTitle className="flex items-center gap-2 text-lg font-semibold">
-                    Taste <Badge variant="secondary">10 pts</Badge>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="pt-2 pb-4 px-4">
-                  <CardDescription>
-                    The overall flavor profile and how enjoyable the dish is. Does the food taste good? Does the dish come together?
-                  </CardDescription>
-                </CardContent>
-              </Card>
-              <Card className="rounded-none shadow-none border-dashed border-gray-300">
-                <CardHeader className="flex-row items-center gap-2 p-4 pb-0">
-                  <CardTitle className="flex items-center gap-2 text-lg font-semibold">
-                    Appearance <Badge variant="secondary">5 pts</Badge>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="pt-2 pb-4 px-4">
-                  <CardDescription>
-                    The visual appeal and arrangement of the dish. Is the food Instagram-worthy? Does the dish come together?
-                  </CardDescription>
-                </CardContent>
-              </Card>
-              <Card className="rounded-none shadow-none border-dashed border-gray-300">
-                <CardHeader className="flex-row items-center gap-2 p-4 pb-0">
-                  <CardTitle className="flex items-center gap-2 text-lg font-semibold">
-                    Effort <Badge variant="secondary">5 pts</Badge>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="pt-2 pb-4 px-4">
-                  <CardDescription>
-                    The dedication and skill required in preparing the dish. How long did the dish demand? How labor-intensive or intricate was the process?
-                  </CardDescription>
-                </CardContent>
-              </Card>
-              <Card className="rounded-none shadow-none border-dashed border-gray-300">
-                <CardHeader className="flex-row items-center gap-2 p-4 pb-0">
-                  <CardTitle className="flex items-center gap-2 text-lg font-semibold">
-                    Misc <Badge variant="secondary">5 pts</Badge>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="pt-2 pb-4 px-4">
-                  <CardDescription>
-                    The memorability and creativity of the dish. Is the food made in a creative way? Is it a unique cooking experience?
-                  </CardDescription>
-                </CardContent>
-              </Card>
+          <CardHeader className="p-4 flex flex-row items-center justify-between">
+            <div>
+              <CardTitle className="text-lg font-bold text-left">Dish Dish</CardTitle>
             </div>
+            <button
+              aria-label={introOpen ? 'Collapse' : 'Expand'}
+              onClick={() => setIntroOpen((open) => !open)}
+              className="p-1 hover:bg-muted transition-colors"
+              style={{ margin: 0 }}
+              type="button"
+            >
+              {introOpen ? <Minus size={20} /> : <Plus size={20} />}
+            </button>
+          </CardHeader>
+          <CardContent className="px-4 pt-0 pb-4">
+            <CardDescription className="text-left">
+              <span dangerouslySetInnerHTML={{ __html: introOpen ? introDescription : getFirstParagraph(introDescription) }} />
+            </CardDescription>
+            {introOpen && (
+              <></> /* No extra content for intro card */
+            )}
+          </CardContent>
+        </Card>
+        {/* Scoring System Card - Collapsible on all screens */}
+        <Card className="w-full rounded-none shadow-none border-dashed border-gray-300">
+          <CardHeader className="p-4 flex flex-row items-center justify-between">
+            <div>
+              <CardTitle className="text-lg font-bold text-left">Scoring System</CardTitle>
+            </div>
+            <button
+              aria-label={scoringOpen ? 'Collapse' : 'Expand'}
+              onClick={() => setScoringOpen((open) => !open)}
+              className="p-1 hover:bg-muted transition-colors"
+              style={{ margin: 0 }}
+              type="button"
+            >
+              {scoringOpen ? <Minus size={20} /> : <Plus size={20} />}
+            </button>
+          </CardHeader>
+          <CardContent className="px-4 pt-0 pb-4">
+            <CardDescription className="text-sm text-left">
+              {scoringDescription}
+            </CardDescription>
+            {scoringOpen && (
+              <div className="grid gap-4 md:grid-cols-2 mt-4">
+                {/* Scoring grid (copied from desktop) */}
+                <Card className="rounded-none shadow-none border-dashed border-gray-300">
+                  <CardHeader className="flex-row items-center gap-2 p-4 pb-0">
+                    <CardTitle className="flex items-center gap-2 text-lg font-semibold">
+                      Taste <Badge variant="secondary">10 pts</Badge>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="pt-2 pb-4 px-4">
+                    <CardDescription>
+                      The overall flavor profile and how enjoyable the dish is. Does the food taste good? Does the dish come together?
+                    </CardDescription>
+                  </CardContent>
+                </Card>
+                <Card className="rounded-none shadow-none border-dashed border-gray-300">
+                  <CardHeader className="flex-row items-center gap-2 p-4 pb-0">
+                    <CardTitle className="flex items-center gap-2 text-lg font-semibold">
+                      Appearance <Badge variant="secondary">5 pts</Badge>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="pt-2 pb-4 px-4">
+                    <CardDescription>
+                      The visual appeal and arrangement of the dish. Is the food Instagram-worthy? Does the dish come together?
+                    </CardDescription>
+                  </CardContent>
+                </Card>
+                <Card className="rounded-none shadow-none border-dashed border-gray-300">
+                  <CardHeader className="flex-row items-center gap-2 p-4 pb-0">
+                    <CardTitle className="flex items-center gap-2 text-lg font-semibold">
+                      Effort <Badge variant="secondary">5 pts</Badge>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="pt-2 pb-4 px-4">
+                    <CardDescription>
+                      The dedication and skill required in preparing the dish. How long did the dish demand? How labor-intensive or intricate was the process?
+                    </CardDescription>
+                  </CardContent>
+                </Card>
+                <Card className="rounded-none shadow-none border-dashed border-gray-300">
+                  <CardHeader className="flex-row items-center gap-2 p-4 pb-0">
+                    <CardTitle className="flex items-center gap-2 text-lg font-semibold">
+                      Misc <Badge variant="secondary">5 pts</Badge>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="pt-2 pb-4 px-4">
+                    <CardDescription>
+                      The memorability and creativity of the dish. Is the food made in a creative way? Is it a unique cooking experience?
+                    </CardDescription>
+                  </CardContent>
+                </Card>
+              </div>
+            )}
           </CardContent>
         </Card>
         <Card className="w-full rounded-none shadow-none border-dashed border-gray-300">
