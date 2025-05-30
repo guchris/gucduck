@@ -15,7 +15,7 @@ import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
 // Lucide Imports
-import { Plus, Minus } from "lucide-react";
+import { Plus, Minus, ArrowDown, ArrowUp } from "lucide-react";
 
 type DishScores = {
   [category: string]: { [index: string]: number };
@@ -31,13 +31,12 @@ type Dish = {
 function sumScores(scores: DishScores): number {
   if (!scores) return 0;
   return Object.values(scores).reduce((total, category) => {
-    return (
-      total +
-      Object.values(category).reduce(
-        (catTotal, val) => catTotal + Number(val),
-        0
-      )
-    );
+    const values = Object.values(category).map(Number);
+    const n = values.length;
+    if (n === 0) return total;
+    // Normalize to 2 people
+    const normalized = values.reduce((a, b) => a + b, 0) * (2 / n);
+    return total + normalized;
   }, 0);
 }
 
@@ -48,16 +47,45 @@ export default function DishDishPage() {
   // Collapse state for mobile cards
   const [introOpen, setIntroOpen] = useState(false);
   const [scoringOpen, setScoringOpen] = useState(false);
+  const [sortDesc, setSortDesc] = useState(true);
+  const [sortBy, setSortBy] = useState<'date' | 'score'>('date');
+  const [search, setSearch] = useState("");
 
-  // Fetch dishes from Firestore on mount
+  function sortDishes(dishes: Dish[], by: 'date' | 'score', desc: boolean) {
+    return [...dishes].sort((a, b) => {
+      if (by === 'date') {
+        const [am, ad, ay] = a.date.split('/').map(Number);
+        const [bm, bd, byy] = b.date.split('/').map(Number);
+        const aDate = new Date(ay, am - 1, ad);
+        const bDate = new Date(byy, bm - 1, bd);
+        return desc ? bDate.getTime() - aDate.getTime() : aDate.getTime() - bDate.getTime();
+      } else {
+        const aScore = sumScores(a.scores);
+        const bScore = sumScores(b.scores);
+        return desc ? bScore - aScore : aScore - bScore;
+      }
+    });
+  }
+
   useEffect(() => {
     async function fetchDishes() {
       const querySnapshot = await getDocs(collection(db, "dish-dish"));
-      setDishes(querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Dish)));
+      const fetched = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Dish));
+      setDishes(sortDishes(fetched, sortBy, sortDesc));
       setLoading(false);
     }
     fetchDishes();
   }, []);
+
+  // When sortDesc or sortBy changes, re-sort
+  useEffect(() => {
+    setDishes((prev) => sortDishes(prev, sortBy, sortDesc));
+  }, [sortDesc, sortBy]);
+
+  // Filtered dishes by search
+  const filteredDishes = dishes.filter(dish =>
+    dish.name.toLowerCase().includes(search.toLowerCase())
+  );
 
   // Helper: get first paragraph from a string
   function getFirstParagraph(text: string) {
@@ -74,7 +102,7 @@ export default function DishDishPage() {
         <NavBar />
       </header>
       <main className="flex-1 flex flex-col items-center gap-4">
-        {/* Dish Dish Card - Collapsible on all screens */}
+        {/* Dish Dish Card */}
         <Card className="w-full rounded-none shadow-none border-dashed border-gray-300">
           <CardHeader className="p-4 flex flex-row items-center justify-between">
             <div>
@@ -99,7 +127,7 @@ export default function DishDishPage() {
             )}
           </CardContent>
         </Card>
-        {/* Scoring System Card - Collapsible on all screens */}
+        {/* Scoring System Card */}
         <Card className="w-full rounded-none shadow-none border-dashed border-gray-300">
           <CardHeader className="p-4 flex flex-row items-center justify-between">
             <div>
@@ -174,19 +202,59 @@ export default function DishDishPage() {
             )}
           </CardContent>
         </Card>
+        {/* Search and Sort Row */}
+        <div className="w-full flex flex-row gap-2">
+          <input
+            type="text"
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            placeholder="Search..."
+            className="w-1/2 border border-dashed border-gray-300 rounded-none py-2 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-muted transition-colors"
+          />
+          <button
+            className={`w-1/4 border border-dashed border-gray-300 rounded-none py-2 text-sm font-medium hover:bg-muted transition-colors flex items-center justify-center gap-2 ${sortBy === 'date' ? 'bg-muted' : ''}`}
+            type="button"
+            onClick={() => {
+              if (sortBy === 'date') {
+                setSortDesc((prev) => !prev);
+              } else {
+                setSortBy('date');
+                setSortDesc(true);
+              }
+            }}
+          >
+            {sortDesc && sortBy === 'date' ? <ArrowDown size={18} /> : <ArrowUp size={18} />}
+            <span>Date</span>
+          </button>
+          <button
+            className={`w-1/4 border border-dashed border-gray-300 rounded-none py-2 text-sm font-medium hover:bg-muted transition-colors flex items-center justify-center gap-2 ${sortBy === 'score' ? 'bg-muted' : ''}`}
+            type="button"
+            onClick={() => {
+              if (sortBy === 'score') {
+                setSortDesc((prev) => !prev);
+              } else {
+                setSortBy('score');
+                setSortDesc(true);
+              }
+            }}
+          >
+            {sortDesc && sortBy === 'score' ? <ArrowDown size={18} /> : <ArrowUp size={18} />}
+            <span>Score</span>
+          </button>
+        </div>
         <Card className="w-full rounded-none shadow-none border-dashed border-gray-300">
           <CardContent className="p-0">
             {/* Loading and empty states */}
             {loading ? (
               <div className="text-center py-8 text-muted-foreground">Loading...</div>
-            ) : dishes.length === 0 ? (
+            ) : filteredDishes.length === 0 ? (
               <div className="text-center py-8 text-muted-foreground">No dishes found.</div>
-            ) : dishes.map((dish, i) => (
+            ) : filteredDishes.map((dish, i) => (
               <div
                 key={dish.id}
                 className={[
                   "flex items-start transition-colors duration-200 cursor-pointer group",
-                  i !== dishes.length - 1 && "border-b border-dashed border-gray-300",
+                  i !== filteredDishes.length - 1 && "border-b border-dashed border-gray-300",
                   "hover:bg-black hover:text-white"
                 ].filter(Boolean).join(" ")}
               >
