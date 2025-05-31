@@ -26,6 +26,7 @@ type Dish = {
   name: string;
   date: string;
   scores: DishScores;
+  images?: string[];
 };
 
 function sumScores(scores: DishScores): number {
@@ -260,7 +261,15 @@ export default function DishDishPage() {
               >
                 {/* Image placeholder and content */}
                 <div className="flex flex-row items-center gap-x-4 flex-1 min-w-0">
-                  <div className="w-16 h-16 bg-gray-200 dark:bg-neutral-800 flex-shrink-0 group-hover:bg-white/20 transition-colors duration-200" />
+                  {Array.isArray(dish.images) && dish.images.length > 0 ? (
+                    <img
+                      src={dish.images[0]}
+                      alt={dish.name}
+                      className="w-16 h-16 object-coverflex-shrink-0 group-hover:bg-white/20 transition-colors duration-200"
+                    />
+                  ) : (
+                    <div className="w-16 h-16 bg-gray-200 dark:bg-neutral-800 flex-shrink-0 group-hover:bg-white/20 transition-colors duration-200" />
+                  )}
                   <div className="flex flex-col justify-center min-w-0 w-full mr-4">
                     <div className="font-semibold text-base truncate">{dish.name}</div>
                     <div className="flex flex-row items-center mt-1 w-full">
