@@ -1,48 +1,36 @@
 // Component Imports  
 import { NavBar } from "@/components/NavBar"
 
-type MainCategory = {
+type SubCategory = {
   id: string
   href: string
 }
 
-const mainCategories: MainCategory[] = [
+const aboutSubCategories: SubCategory[] = [
   {
-    id: 'about',
-    href: '/about'
+    id: 'career',
+    href: '/about/career'
   },
   {
-    id: 'fashion',
-    href: '/fashion'
+    id: 'education',
+    href: '/about/education'
   },
   {
-    id: 'food',
-    href: '/food'
-  },
-  {
-    id: 'founder',
-    href: '/founder'
-  },
-  {
-    id: 'photography',
-    href: '/photography'
-  },
-  {
-    id: 'travel',
-    href: '/travel'
+    id: 'goals',
+    href: '/about/goals'
   }
 ]
 
-export default function Home() {
+export default function AboutPage() {
   return (
     <>
       <div className="min-h-screen flex flex-col max-w-screen-xl mx-auto gap-4 p-4">
         <NavBar />
         <main className="flex-1 flex flex-col items-start gap-4">
-          {/* Main Categories List */}
+          {/* Sub-categories List */}
           <div className="w-full">
             <div className="space-y-2">
-              {mainCategories.map((category) => (
+              {aboutSubCategories.map((category) => (
                 <a
                   key={category.id}
                   href={category.href}
