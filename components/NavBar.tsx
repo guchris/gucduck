@@ -60,7 +60,7 @@ export function NavBar() {
       <div className="h-full flex items-stretch">
         <Link
           href="/"
-          className="flex items-center justify-center h-full px-4 text-base font-bold cursor-pointer transition-colors duration-200 hover:text-white hover:bg-black border-r border-dashed border-gray-300"
+          className="flex items-center justify-center h-full px-4 text-base font-bold cursor-pointer transition-colors duration-200 hover:text-white hover:bg-black dark:hover:text-black dark:hover:bg-white border-r border-dashed border-gray-300"
         >
           gucduck
         </Link>
@@ -117,7 +117,7 @@ export function NavBar() {
       <div className="flex-1" />
       <button
         onClick={toggleTheme}
-        className="flex items-center justify-center h-full px-4 text-base font-bold cursor-pointer transition-colors duration-200 hover:text-white hover:bg-black border-l border-dashed border-gray-300 bg-white dark:bg-black rounded-none"
+        className="flex items-center justify-center h-full px-4 text-base font-bold cursor-pointer transition-colors duration-200 hover:text-white hover:bg-black dark:hover:text-black dark:hover:bg-white border-l border-dashed border-gray-300 bg-white dark:bg-black rounded-none"
         aria-label="Toggle dark mode"
         type="button"
       >
