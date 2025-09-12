@@ -2,57 +2,32 @@
 import { NavBar } from "@/components/NavBar"
 import { AnimatedCard } from "@/components/AnimatedCard"
 
-type MainCategory = {
+type SubCategory = {
   id: string
   href: string
 }
 
-const mainCategories: MainCategory[] = [
+const travelSubCategories: SubCategory[] = [
   {
-    id: 'about',
-    href: '/about'
+    id: 'checklist',
+    href: '/travel/checklist'
   },
   {
-    id: 'fashion',
-    href: '/fashion'
-  },
-  {
-    id: 'food',
-    href: '/food'
-  },
-  {
-    id: 'founder',
-    href: '/founder'
-  },
-  {
-    id: 'music',
-    href: '/music'
-  },
-  {
-    id: 'other',
-    href: '/other'
-  },
-  {
-    id: 'photography',
-    href: '/photography'
-  },
-  {
-    id: 'travel',
-    href: '/travel'
+    id: 'guides',
+    href: '/travel/guides'
   }
 ]
 
-export default function Home() {
-
+export default function TravelPage() {
   return (
     <>
       <div className="min-h-screen flex flex-col max-w-screen-xl mx-auto gap-4 p-4">
         <NavBar />
         <main className="flex-1 flex flex-col items-start gap-4">
-          {/* Main Categories List */}
+          {/* Sub-categories List */}
           <div className="w-full">
             <div className="space-y-2">
-              {mainCategories.map((category) => (
+              {travelSubCategories.map((category) => (
                 <AnimatedCard
                   key={category.id}
                   id={category.id}

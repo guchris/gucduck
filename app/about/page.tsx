@@ -1,5 +1,11 @@
+"use client"
+
+// React Imports
+import { useState } from "react"
+
 // Component Imports  
 import { NavBar } from "@/components/NavBar"
+import { AnimatedCard } from "@/components/AnimatedCard"
 
 type SubCategory = {
   id: string
@@ -31,15 +37,13 @@ export default function AboutPage() {
           <div className="w-full">
             <div className="space-y-2">
               {aboutSubCategories.map((category) => (
-                <a
+                <AnimatedCard
                   key={category.id}
+                  id={category.id}
                   href={category.href}
-                  className="block w-fit h-12 border border-dashed border-gray-300 transition-all duration-300 cursor-pointer group hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black px-4 flex items-center"
                 >
-                  <h3 className="text-base font-bold">
-                    {category.id}
-                  </h3>
-                </a>
+                  {category.id}
+                </AnimatedCard>
               ))}
             </div>
           </div>
