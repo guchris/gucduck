@@ -68,6 +68,8 @@ export function AnimatedCard({ id, href, children }: AnimatedCardProps) {
       className="block w-full h-12 border border-dashed border-gray-300 transition-all duration-300 cursor-pointer group hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black px-4 flex items-center overflow-hidden"
       onMouseEnter={() => handleMouseEnter(id)}
       onMouseLeave={() => handleMouseLeave(id)}
+      onTouchStart={() => handleMouseEnter(id)}
+      onTouchEnd={() => handleMouseLeave(id)}
     >
       <h3 className="text-base font-bold whitespace-nowrap">
         {animationTexts[id] || id}
