@@ -5,40 +5,49 @@ import { AnimatedCard } from "@/components/AnimatedCard"
 type MainCategory = {
   id: string
   href: string
+  color: string
 }
 
 const mainCategories: MainCategory[] = [
   {
     id: 'about',
-    href: '/about'
+    href: '/about',
+    color: 'blue'
   },
   {
     id: 'fashion',
-    href: '/fashion'
+    href: '/fashion',
+    color: 'pink'
   },
   {
     id: 'food',
-    href: '/food'
+    href: '/food',
+    color: 'yellow'
   },
   {
     id: 'founder',
-    href: '/founder'
+    href: '/founder',
+    color: 'green'
   },
   {
     id: 'music',
-    href: '/music'
-  },
-  {
-    id: 'other',
-    href: '/other'
+    href: '/music',
+    color: 'purple'
   },
   {
     id: 'photography',
-    href: '/photography'
+    href: '/photography',
+    color: 'gray'
   },
   {
     id: 'travel',
-    href: '/travel'
+    href: '/travel',
+    color: 'orange'
+  },
+  {
+    id: 'other',
+    href: '/other',
+    color: 'black'
   }
 ]
 
@@ -57,6 +66,7 @@ export default function Home() {
                   key={category.id}
                   id={category.id}
                   href={category.href}
+                  color={category.color}
                 >
                   {category.id}
                 </AnimatedCard>
