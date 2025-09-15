@@ -67,9 +67,7 @@ export default function Home() {
                   id={category.id}
                   href={category.href}
                   color={category.color}
-                >
-                  {category.id}
-                </AnimatedCard>
+                />
               ))}
             </div>
           </div>
