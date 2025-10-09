@@ -159,10 +159,14 @@ export function AnimatedDuck() {
             // Turn gradually (like a real duck)
             const turnSpeed = 0.05
             const newAngle = currentAngle + angleDiff * turnSpeed
-            const speed = Math.sqrt(newVelX * newVelX + newVelY * newVelY)
+            const currentSpeed = Math.sqrt(newVelX * newVelX + newVelY * newVelY)
             
-            newVelX = Math.cos(newAngle) * speed
-            newVelY = Math.sin(newAngle) * speed
+            // Increase speed when following cursor (but not too fast)
+            const followSpeedMultiplier = 1.5 // 50% faster when following
+            const newSpeed = Math.min(currentSpeed * followSpeedMultiplier, 1.2) // Cap at reasonable speed
+            
+            newVelX = Math.cos(newAngle) * newSpeed
+            newVelY = Math.sin(newAngle) * newSpeed
           }
         } else {
           // Autonomous swimming - create oval/circular motion patterns like real ducks
