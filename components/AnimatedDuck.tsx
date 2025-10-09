@@ -28,6 +28,7 @@ export function AnimatedDuck() {
 
     const handleTouchMove = (e: TouchEvent) => {
       e.preventDefault() // Prevent scrolling
+      e.stopPropagation() // Prevent event bubbling
       if (e.touches.length > 0) {
         const touch = e.touches[0]
         setMousePosition({ x: touch.clientX, y: touch.clientY })
@@ -44,11 +45,15 @@ export function AnimatedDuck() {
       setIsMouseActive(false)
     }
 
-    const handleTouchStart = () => {
+    const handleTouchStart = (e: TouchEvent) => {
+      e.preventDefault()
+      e.stopPropagation()
       setIsMouseActive(true)
     }
 
-    const handleTouchEnd = () => {
+    const handleTouchEnd = (e: TouchEvent) => {
+      e.preventDefault()
+      e.stopPropagation()
       setIsMouseActive(false)
     }
 
@@ -276,11 +281,17 @@ export function AnimatedDuck() {
 
 
   return (
-    <div className="fixed inset-0 overflow-hidden pointer-events-none">
+    <div className="fixed inset-0 overflow-hidden pointer-events-none" style={{ touchAction: 'none' }}>
       {/* Travel Path Line */}
       <svg
         className="absolute inset-0 w-full h-full pointer-events-none"
-        style={{ zIndex: 1 }}
+        style={{ 
+          zIndex: 1,
+          touchAction: 'none',
+          WebkitTouchCallout: 'none',
+          WebkitUserSelect: 'none',
+          userSelect: 'none'
+        }}
       >
         <path
           d={travelPath.length > 1 
@@ -303,11 +314,23 @@ export function AnimatedDuck() {
           top: duckPosition.y,
           transform: 'translate(-50%, -50%)',
           zIndex: 2,
+          touchAction: 'none',
+          WebkitTouchCallout: 'none',
+          WebkitUserSelect: 'none',
+          userSelect: 'none'
         }}
       >
         {/* Gamertag */}
         <div className="absolute -top-12 left-1/2 transform -translate-x-1/2">
-          <div className="bg-black/80 text-white px-3 py-1 rounded-lg text-sm font-bold tracking-wider">
+          <div 
+            className="bg-black/80 text-white px-3 py-1 rounded-lg text-sm font-bold tracking-wider"
+            style={{
+              touchAction: 'none',
+              WebkitTouchCallout: 'none',
+              WebkitUserSelect: 'none',
+              userSelect: 'none'
+            }}
+          >
             gucduck
           </div>
         </div>
@@ -318,6 +341,10 @@ export function AnimatedDuck() {
           style={{
             transform: isMouseActive ? 'scale(1.2)' : 'scale(1)',
             filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))',
+            touchAction: 'none',
+            WebkitTouchCallout: 'none',
+            WebkitUserSelect: 'none',
+            userSelect: 'none'
           }}
         />
       </div>
