@@ -14,9 +14,20 @@ export function AnimatedDuck() {
   const [isMouseActive, setIsMouseActive] = useState(false)
   const [travelPath, setTravelPath] = useState<Position[]>([])
   const [duckVelocity, setDuckVelocity] = useState<Position>({ x: 0, y: 0 })
+  const [isMobile, setIsMobile] = useState(false)
   const animationRef = useRef<number | undefined>(undefined)
   const lastMouseMoveRef = useRef<number>(0)
   const lastPathPointRef = useRef<Position>({ x: 0, y: 0 })
+
+  // Detect mobile device
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768 || 'ontouchstart' in window)
+    }
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
   // Handle mouse and touch movement
   useEffect(() => {
@@ -31,9 +42,13 @@ export function AnimatedDuck() {
       e.stopPropagation() // Prevent event bubbling
       if (e.touches.length > 0) {
         const touch = e.touches[0]
-        setMousePosition({ x: touch.clientX, y: touch.clientY })
-        setIsMouseActive(true)
-        lastMouseMoveRef.current = Date.now()
+        // Add some smoothing to reduce jittery movement on mobile
+        const currentTime = Date.now()
+        if (currentTime - lastMouseMoveRef.current > 16) { // ~60fps throttling
+          setMousePosition({ x: touch.clientX, y: touch.clientY })
+          setIsMouseActive(true)
+          lastMouseMoveRef.current = currentTime
+        }
       }
     }
 
@@ -92,7 +107,8 @@ export function AnimatedDuck() {
     
     // Only add point if duck has moved a minimum distance
     const distance = Math.sqrt((x - lastPoint.x) ** 2 + (y - lastPoint.y) ** 2)
-    if (distance > 3) {
+    const minDistance = isMobile ? 5 : 3 // Higher threshold on mobile to reduce streaking
+    if (distance > minDistance) {
       setTravelPath(prev => [...prev, newPoint])
       lastPathPointRef.current = newPoint
     }
@@ -258,10 +274,18 @@ export function AnimatedDuck() {
         // Update velocity
         setDuckVelocity({ x: newVelX, y: newVelY })
 
-        // Add to travel path (only when moving)
+        // Add to travel path (with mobile-specific filtering)
         const speed = Math.sqrt(newVelX * newVelX + newVelY * newVelY)
-        if (speed > 0.1) { // Lower threshold since duck moves slower now
-          addToTravelPath(newX, newY)
+        if (isMobile) {
+          // Mobile: Only add points when moving at reasonable speed to prevent streaking
+          if (speed > 0.2 && speed < 3.0) {
+            addToTravelPath(newX, newY)
+          }
+        } else {
+          // Desktop: Original behavior - add points when moving fast enough
+          if (speed > 0.1) {
+            addToTravelPath(newX, newY)
+          }
         }
 
         return { x: newX, y: newY }
@@ -290,7 +314,8 @@ export function AnimatedDuck() {
           touchAction: 'none',
           WebkitTouchCallout: 'none',
           WebkitUserSelect: 'none',
-          userSelect: 'none'
+          userSelect: 'none',
+          ...(isMobile && { willChange: 'auto' }) // Only optimize for mobile rendering
         }}
       >
         <path
@@ -303,6 +328,9 @@ export function AnimatedDuck() {
           fill="none"
           strokeLinecap="round"
           strokeLinejoin="round"
+          style={{
+            ...(isMobile && { vectorEffect: 'non-scaling-stroke' }) // Only prevent stroke scaling issues on mobile
+          }}
         />
       </svg>
       
