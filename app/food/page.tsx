@@ -36,9 +36,7 @@ export default function FoodPage() {
                   key={category.id}
                   id={category.id}
                   href={category.href}
-                >
-                  {category.id}
-                </AnimatedCard>
+                />
               ))}
             </div>
           </div>

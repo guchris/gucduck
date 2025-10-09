@@ -41,9 +41,7 @@ export default function AboutPage() {
                   key={category.id}
                   id={category.id}
                   href={category.href}
-                >
-                  {category.id}
-                </AnimatedCard>
+                />
               ))}
             </div>
           </div>

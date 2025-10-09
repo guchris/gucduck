@@ -28,9 +28,7 @@ export default function MusicPage() {
                   key={category.id}
                   id={category.id}
                   href={category.href}
-                >
-                  {category.id}
-                </AnimatedCard>
+                />
               ))}
             </div>
           </div>
