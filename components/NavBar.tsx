@@ -7,140 +7,155 @@ import React, { useEffect, useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 
-// Shadcn Imports
-import { Menubar, MenubarContent, MenubarItem, MenubarMenu, MenubarSeparator, MenubarSub, MenubarSubContent, MenubarSubTrigger, MenubarTrigger } from "@/components/ui/menubar"
-import { Sun, Moon, ChevronRight } from "lucide-react"
-
-function useCurrentDateTime() {
-  const [now, setNow] = React.useState(new Date());
-
-  React.useEffect(() => {
-    const interval = setInterval(() => setNow(new Date()), 1000 * 60);
-    return () => clearInterval(interval);
-  }, []);
-
-  const date = now.toLocaleDateString(undefined, {
-    weekday: "short",
-    month: "short",
-    day: "numeric",
-  });
-  const time = now.toLocaleTimeString(undefined, {
-    hour: "numeric",
-    minute: "2-digit",
-    hour12: true,
-  });
-  return { date, time };
+type MainCategory = {
+  id: string
+  href: string
+  color: string
+  number: number
 }
 
+const mainCategories: MainCategory[] = [
+  {
+    id: 'about',
+    href: '/about',
+    color: 'blue',
+    number: 1
+  },
+  {
+    id: 'fashion',
+    href: '/fashion',
+    color: 'pink',
+    number: 2
+  },
+  {
+    id: 'food',
+    href: '/food',
+    color: 'yellow',
+    number: 3
+  },
+  {
+    id: 'founder',
+    href: '/founder',
+    color: 'green',
+    number: 4
+  },
+  {
+    id: 'music',
+    href: '/music',
+    color: 'purple',
+    number: 5
+  },
+  {
+    id: 'travel',
+    href: '/travel',
+    color: 'orange',
+    number: 6
+  },
+  {
+    id: 'duck',
+    href: '/duck',
+    color: 'gray',
+    number: 7
+  },
+  {
+    id: 'other',
+    href: '/other',
+    color: 'black',
+    number: 8
+  }
+]
+
 export function NavBar() {
-  const { date, time } = useCurrentDateTime();
-  const [isDark, setIsDark] = useState(false);
-  const pathname = usePathname();
+  const [currentColorIndex, setCurrentColorIndex] = useState(0)
+  const colors = ['blue', 'pink', 'yellow', 'green', 'purple', 'orange', 'gray', 'black']
+  const pathname = usePathname()
 
   useEffect(() => {
-    // On mount, check the current theme
-    if (typeof window !== "undefined") {
-      setIsDark(document.documentElement.classList.contains("dark"));
-    }
-  }, []);
+    const interval = setInterval(() => {
+      setCurrentColorIndex((prevIndex) => (prevIndex + 1) % colors.length)
+    }, 1000)
 
-  const toggleTheme = () => {
-    if (typeof window !== "undefined") {
-      const html = document.documentElement;
-      if (html.classList.contains("dark")) {
-        html.classList.remove("dark");
-        setIsDark(false);
-      } else {
-        html.classList.add("dark");
-        setIsDark(true);
-      }
-    }
-  };
+    return () => clearInterval(interval)
+  }, [])
 
-  // Generate breadcrumb from pathname
-  const generateBreadcrumb = () => {
-    const segments = pathname.split('/').filter(Boolean);
-    const breadcrumb = [];
-    
-    // Add home
-    breadcrumb.push({ name: 'gucduck', href: '/', color: null });
-    
-    // Add path segments
-    let currentPath = '';
-    segments.forEach((segment, index) => {
-      currentPath += `/${segment}`;
-      const name = segment.toLowerCase();
-      
-      // Assign colors to main categories
-      const categoryColors: {[key: string]: string} = {
-        'about': 'blue',
-        'fashion': 'pink',
-        'food': 'yellow',
-        'founder': 'green',
-        'music': 'purple',
-        'photography': 'gray',
-        'travel': 'orange',
-        'other': 'black'
-      };
-      
-      const color = categoryColors[name] || null;
-      breadcrumb.push({ name, href: currentPath, color });
-    });
-    
-    return breadcrumb;
-  };
-
-  const breadcrumb = generateBreadcrumb();
-
-  const getBreadcrumbColorClasses = (color: string | null) => {
-    if (!color) {
-      return "hover:text-white hover:bg-black dark:hover:text-black dark:hover:bg-white"
-    }
-    
-    // Color mappings - only apply colors on hover/interaction
+  const getColorClasses = (color: string) => {
     const colorMap: {[key: string]: string} = {
-      'red': 'hover:border-red-500 hover:bg-red-500 hover:text-white dark:hover:border-red-400 dark:hover:bg-red-500 dark:hover:text-white',
-      'blue': 'hover:border-blue-500 hover:bg-blue-500 hover:text-white dark:hover:border-blue-400 dark:hover:bg-blue-500 dark:hover:text-white',
-      'yellow': 'hover:border-yellow-500 hover:bg-yellow-500 hover:text-black dark:hover:border-yellow-400 dark:hover:bg-yellow-500 dark:hover:text-black',
-      'pink': 'hover:border-pink-500 hover:bg-pink-500 hover:text-white dark:hover:border-pink-400 dark:hover:bg-pink-500 dark:hover:text-white',
-      'green': 'hover:border-green-500 hover:bg-green-500 hover:text-white dark:hover:border-green-400 dark:hover:bg-green-500 dark:hover:text-white',
-      'purple': 'hover:border-purple-500 hover:bg-purple-500 hover:text-white dark:hover:border-purple-400 dark:hover:bg-purple-500 dark:hover:text-white',
-      'gray': 'hover:border-gray-500 hover:bg-gray-500 hover:text-white dark:hover:border-gray-400 dark:hover:bg-gray-500 dark:hover:text-white',
-      'orange': 'hover:border-orange-500 hover:bg-orange-500 hover:text-white dark:hover:border-orange-400 dark:hover:bg-orange-500 dark:hover:text-white',
-      'white': 'hover:border-gray-400 hover:bg-gray-100 hover:text-black dark:hover:border-gray-500 dark:hover:bg-gray-700 dark:hover:text-white',
-      'black': 'hover:border-black hover:bg-black hover:text-white dark:hover:border-white dark:hover:bg-white dark:hover:text-black'
+      'blue': 'bg-blue-500',
+      'pink': 'bg-pink-500', 
+      'yellow': 'bg-yellow-500',
+      'green': 'bg-green-500',
+      'purple': 'bg-purple-500',
+      'orange': 'bg-orange-500',
+      'gray': 'bg-gray-500',
+      'black': 'bg-black'
     }
-    
-    return colorMap[color] || "hover:text-white hover:bg-black dark:hover:text-black dark:hover:bg-white"
+    return colorMap[color] || 'bg-gray-500'
+  }
+
+  const getHoverClasses = (color: string) => {
+    const hoverMap: {[key: string]: string} = {
+      'blue': 'hover:bg-blue-500', 
+      'pink': 'hover:bg-pink-500', 
+      'yellow': 'hover:bg-yellow-500',
+      'green': 'hover:bg-green-500',
+      'purple': 'hover:bg-purple-500',
+      'orange': 'hover:bg-orange-500',
+      'gray': 'hover:bg-gray-500',
+      'black': 'hover:bg-black'
+    }
+    return hoverMap[color] || 'hover:bg-gray-500'
+  }
+
+  const getActiveClasses = (color: string) => {
+    const activeMap: {[key: string]: string} = {
+      'blue': 'bg-blue-500 text-white',
+      'pink': 'bg-pink-500 text-white', 
+      'yellow': 'bg-yellow-500 text-white',
+      'green': 'bg-green-500 text-white',
+      'purple': 'bg-purple-500 text-white',
+      'orange': 'bg-orange-500 text-white',
+      'gray': 'bg-gray-500 text-white',
+      'black': 'bg-black text-white'
+    }
+    return activeMap[color] || 'bg-gray-500 text-white'
   }
 
   return (
-    <div className="flex w-full h-12 border border-dashed border-gray-300">
-      <div className="h-full flex items-stretch">
-        {/* Breadcrumb Navigation */}
-        {breadcrumb.map((item, index) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            className={`flex items-center justify-center h-full px-4 text-base font-bold cursor-pointer transition-colors duration-200 border-r border-dashed border-gray-300 ${getBreadcrumbColorClasses(item.color)}`}
-          >
-            {item.name}
-          </Link>
-        ))}
+    <div className="w-full">
+      <div className="flex items-start justify-between py-4">
+        {/* Left: Corner dot with name */}
+        <Link href="/" className="flex items-center gap-2 group">
+          <div className={`w-3 h-3 rounded-full transition-colors duration-500 ${getColorClasses(colors[currentColorIndex])}`}></div>
+          <div className={`text-xs font-medium transition-all duration-200 ${getHoverClasses(colors[currentColorIndex])} hover:text-white`}>
+            Chris Gu
+          </div>
+        </Link>
+
+        {/* Right: Colored navigation dots */}
+        <div className="transform rotate-90 origin-top-left -mr-16">
+          <div className="flex flex-col items-start">
+            {mainCategories.slice().reverse().map((category) => {
+              const isActive = pathname === category.href
+              return (
+                <Link
+                  key={category.id}
+                  href={category.href}
+                  className="flex items-center gap-2 group transition-all duration-200"
+                >
+                  <div className={`w-3 h-3 rounded-full ${getColorClasses(category.color)}`}></div>
+                  <div className={`text-xs font-medium tracking-wide transition-all duration-200 ${
+                    isActive 
+                      ? getActiveClasses(category.color)
+                      : `${getHoverClasses(category.color)} hover:text-white`
+                  }`}>
+                    {category.id.charAt(0).toUpperCase() + category.id.slice(1)}
+                  </div>
+                </Link>
+              )
+            })}
+          </div>
+        </div>
       </div>
-      <div className="flex-1" />
-      <button
-        onClick={toggleTheme}
-        className="flex items-center justify-center h-full px-4 text-base font-bold cursor-pointer transition-colors duration-200 hover:text-white hover:bg-black dark:hover:text-black dark:hover:bg-white border-l border-dashed border-gray-300 bg-white dark:bg-black rounded-none"
-        aria-label="Toggle dark mode"
-        type="button"
-      >
-        {isDark ? (
-          <Sun className="h-5 w-5 transition-transform duration-300 rotate-0 scale-100" />
-        ) : (
-          <Moon className="h-5 w-5 transition-transform duration-300 rotate-0 scale-100" />
-        )}
-      </button>
     </div>
   );
 } 
