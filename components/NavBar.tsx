@@ -135,10 +135,8 @@ export function NavBar() {
   }
 
   return (
-    <div className="w-full sticky top-0 bg-white dark:bg-black transition-all duration-300">
-        <div 
-          className={`flex items-start justify-between transition-all duration-300 py-4 ${isExpanded ? '' : 'h-12'}`}
-        >
+    <div className="w-full sticky top-0 bg-transparent transition-all duration-300 z-50">
+        <div className="flex items-start justify-between transition-all duration-300 py-4">
         {/* Left: Corner dot with name */}
         <Link href="/" className="flex items-start gap-2 group">
           <div className={`w-3 h-3 rounded-full transition-colors duration-500 ${getColorClasses(colors[currentColorIndex])}`}></div>
