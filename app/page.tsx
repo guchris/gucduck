@@ -91,6 +91,20 @@ const getCategoryTextColor = (category: string) => {
   return colorMap[category] || 'text-gray-600'
 }
 
+const getCategoryHoverClasses = (category: string) => {
+  const hoverMap: { [key: string]: string } = {
+    'about': 'hover:bg-blue-500 hover:text-white',
+    'fashion': 'hover:bg-pink-500 hover:text-white',
+    'food': 'hover:bg-yellow-500 hover:text-white',
+    'founder': 'hover:bg-green-500 hover:text-white',
+    'music': 'hover:bg-purple-500 hover:text-white',
+    'travel': 'hover:bg-orange-500 hover:text-white',
+    'duck': 'hover:bg-gray-500 hover:text-white',
+    'other': 'hover:bg-black hover:text-white'
+  }
+  return hoverMap[category] || 'hover:bg-gray-500 hover:text-white'
+}
+
 export default function Home() {
   return (
     <>
@@ -108,16 +122,16 @@ export default function Home() {
             {/* Main Content List */}
             <div className="w-full space-y-1">
               {mockProjects.map((project) => (
-                <div key={project.id} className="group cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors">
-                  <div className="flex items-start gap-4">
+                <div key={project.id} className="group">
+                  <div className="flex items-start gap-2">
                     {/* Dot */}
-                    <div className={`w-3 h-3 rounded-full ${getCategoryColor(project.category)} flex-shrink-0 mt-1`}></div>
+                    <div className={`w-3 h-3 rounded-full ${getCategoryColor(project.category)} flex-shrink-0 mt-0.5`}></div>
                     
                     {/* Content */}
                     <div className="flex-1 min-w-0">
                       {/* Title and Timestamp */}
                       <div className="flex items-center gap-2">
-                        <h3 className="text-xs font-medium text-gray-900 dark:text-white group-hover:text-gray-600 dark:group-hover:text-gray-300 transition-colors">
+                        <h3 className={`text-xs font-medium transition-all duration-200 text-black dark:text-white ${getCategoryHoverClasses(project.category)}`}>
                           {project.title}
                         </h3>
                         <span className="text-xs text-gray-500 dark:text-gray-400">
