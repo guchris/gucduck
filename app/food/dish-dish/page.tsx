@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 
 // Component Imports
 import { NavBar } from "@/components/NavBar";
+import { SubNav } from "@/components/SubNav";
 
 // Firebase Imports
 import { collection, getDocs } from "firebase/firestore";
@@ -12,6 +13,12 @@ import { db } from "@/lib/firebase";
 
 // Lucide Imports
 import { ArrowDown, ArrowUp } from "lucide-react";
+
+const foodSubNavItems = [
+  { id: "dish-dish", label: "DishDish", href: "/food/dish-dish" },
+  { id: "grounded", label: "Grounded", href: "/food/grounded" },
+  { id: "recipes", label: "Recipes", href: "/food/recipes" }
+];
 
 type DishScores = {
   [category: string]: { [index: string]: number };
@@ -120,32 +127,20 @@ export default function DishDishPage() {
     return text.split(/<br\s*\/?><br\s*\/?/)[0];
   }
 
-  // Card descriptions as strings for easy splitting
-  const introDescription = `Dish Dish is me and my best friend Anjuli's favorite tradition. Every so often, we pick a recipe from social media, split the grocery list, and meet up at my place to cook, catch up, and laugh about everything and nothing.<br /><br />It's not just about the food (though that part's great) — it's our way of making time for each other. We always snap pics of our creations, eat way too much, and then rate the dish like we're judges on a cooking show.`;
-  const scoringDescription = `A dish's score is derived from the combined points assigned by both Anjuli and me in the following categories.`;
-
   return (
     <>
       <div className="min-h-screen bg-white dark:bg-black">
         <div className="w-full px-6">
         <NavBar />
+        <SubNav items={foodSubNavItems} color="yellow" />
           
-          <main className="flex-1">
-            {/* Header */}
-            <div className="mb-8">
-              <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
-                <h2 className="text-xs font-medium text-gray-900 dark:text-white">Dish Dish</h2>
-              </div>
-            </div>
+          <main className="flex-1 pt-6">
 
             {/* Hero Section */}
             <div className="mb-12">
               <div className="space-y-4">
                 <p className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">
-                  Dish Dish is me and my best friend Anjuli's favorite tradition. Every so often, we pick a recipe from social media, split the grocery list, and meet up at my place to cook, catch up, and laugh about everything and nothing.
-                </p>
-                <p className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">
-                  It's not just about the food (though that part's great) — it's our way of making time for each other. We always snap pics of our creations, eat way too much, and then rate the dish like we're judges on a cooking show.
+                  Dish Dish is me and my best friend Anjuli's favorite tradition. Every so often, we pick a recipe from social media, split the grocery list, and meet up at my place to cook, catch up, and laugh about everything and nothing. It's not just about the food (though that part's great) - it's our way of making time for each other. We always snap pics of our creations, eat way too much, and then rate the dish like we're judges on a cooking show.
                 </p>
               </div>
             </div>

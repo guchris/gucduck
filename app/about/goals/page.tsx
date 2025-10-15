@@ -1,24 +1,23 @@
+"use client"
+
 // Component Imports  
 import { NavBar } from "@/components/NavBar"
+import { SubNav } from "@/components/SubNav"
+
+const aboutSubNavItems = [
+  { id: "career", label: "Career", href: "/about/career" },
+  { id: "education", label: "Education", href: "/about/education" },
+  { id: "goals", label: "Goals", href: "/about/goals" }
+]
 
 export default function GoalsPage() {
   return (
     <>
-      <div className="min-h-screen flex flex-col max-w-screen-xl mx-auto gap-4 p-4">
-        <NavBar />
-        <main className="flex-1 flex flex-col items-start gap-4">
-          {/* Page Content */}
-          <div className="w-full">
-            <div className="space-y-4">
-              <div className="border border-dashed border-gray-300 p-6">
-                <h1 className="text-2xl font-bold mb-4">Goals</h1>
-                <p className="text-gray-600 dark:text-gray-300">
-                  My aspirations, objectives, and what I'm working towards will be outlined here.
-                </p>
-              </div>
-            </div>
-          </div>
-        </main>
+      <div className="min-h-screen bg-white dark:bg-black">
+        <div className="w-full px-6">
+          <NavBar />
+          <SubNav items={aboutSubNavItems} color="blue" />
+        </div>
       </div>
     </>
   );
