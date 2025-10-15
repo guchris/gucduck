@@ -97,7 +97,7 @@ export default function Home() {
       <div className="min-h-screen bg-white dark:bg-black">
         <div className="w-full px-6">
           <NavBar />
-          <main className="flex-1 py-8">
+          <main className="flex-1">
             {/* Header */}
             <div className="mb-8">
               <div className="border-t border-gray-200 dark:border-gray-700 pt-6">

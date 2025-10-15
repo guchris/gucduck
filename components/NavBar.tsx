@@ -67,6 +67,7 @@ const mainCategories: MainCategory[] = [
 
 export function NavBar() {
   const [currentColorIndex, setCurrentColorIndex] = useState(0)
+  const [isExpanded, setIsExpanded] = useState(true)
   const colors = ['blue', 'pink', 'yellow', 'green', 'purple', 'orange', 'gray', 'black']
   const pathname = usePathname()
 
@@ -76,6 +77,19 @@ export function NavBar() {
     }, 1000)
 
     return () => clearInterval(interval)
+  }, [])
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY
+      
+      // Expanded only shows when at the very top (scrollY < 10px)
+      // Compact shows when scrolling (scrollY >= 10px)
+      setIsExpanded(currentScrollY < 10)
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
   const getColorClasses = (color: string) => {
@@ -121,12 +135,14 @@ export function NavBar() {
   }
 
   return (
-    <div className="w-full">
-      <div className="flex items-start justify-between py-4">
+    <div className="w-full sticky top-0 bg-white dark:bg-black transition-all duration-300">
+        <div 
+          className={`flex items-start justify-between transition-all duration-300 py-4 ${isExpanded ? '' : 'h-12'}`}
+        >
         {/* Left: Corner dot with name */}
-        <Link href="/" className="flex items-center gap-2 group">
+        <Link href="/" className="flex items-start gap-2 group">
           <div className={`w-3 h-3 rounded-full transition-colors duration-500 ${getColorClasses(colors[currentColorIndex])}`}></div>
-          <div className={`text-xs font-medium transition-all duration-200 ${getHoverClasses(colors[currentColorIndex])} hover:text-white`}>
+          <div className={`text-xs font-medium transition-all duration-200 ${getHoverClasses(colors[currentColorIndex])} hover:text-white -mt-0.5`}>
             Chris Gu
           </div>
         </Link>
@@ -147,7 +163,7 @@ export function NavBar() {
                     isActive 
                       ? getActiveClasses(category.color)
                       : `${getHoverClasses(category.color)} hover:text-white`
-                  }`}>
+                  } ${isExpanded ? 'opacity-100' : 'opacity-0'}`}>
                     {category.id.charAt(0).toUpperCase() + category.id.slice(1)}
                   </div>
                 </Link>
