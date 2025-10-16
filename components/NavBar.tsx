@@ -85,6 +85,7 @@ const mainCategories: MainCategory[] = [
 export function NavBar() {
   const [currentColorIndex, setCurrentColorIndex] = useState(0)
   const [isExpanded, setIsExpanded] = useState(true)
+  const [dotsAnimated, setDotsAnimated] = useState(false)
   const colors = ['blue', 'pink', 'yellow', 'green', 'purple', 'orange', 'gray', 'black']
   const pathname = usePathname()
 
@@ -94,6 +95,15 @@ export function NavBar() {
     }, 1000)
 
     return () => clearInterval(interval)
+  }, [])
+
+  useEffect(() => {
+    // Trigger dots animation on mount
+    const timer = setTimeout(() => {
+      setDotsAnimated(true)
+    }, 50)
+    
+    return () => clearTimeout(timer)
   }, [])
 
   useEffect(() => {
@@ -156,7 +166,7 @@ export function NavBar() {
         <div className="flex items-start justify-between transition-all duration-300 py-4">
         {/* Left: Corner dot with name */}
         <Link href="/" className="flex items-start gap-2 group">
-          <div className={`w-3 h-3 rounded-full transition-colors duration-500 ${getColorClasses(colors[currentColorIndex])}`}></div>
+          <div className={`w-3 h-3 rounded-full transition-all duration-500 ${getColorClasses(colors[currentColorIndex])} group-hover:scale-110`}></div>
           <div className={`text-xs font-medium transition-all duration-200 ${getHoverClasses(colors[currentColorIndex])} hover:text-white -mt-0.5`}>
             Chris Gu
           </div>
@@ -167,25 +177,34 @@ export function NavBar() {
           {/* Main Navigation */}
           <div className="transform rotate-90 origin-top-left -mr-16">
             <div className="flex flex-col items-start">
-              {mainCategories.slice().reverse().map((category) => {
-                const isActive = pathname === category.href || (category.subCategories && category.subCategories.some(sub => pathname === sub.href))
-                return (
-                  <Link
-                    key={category.id}
-                    href={category.href}
-                    className="flex items-center gap-2 group transition-all duration-200"
-                  >
-                    <div className={`w-3 h-3 rounded-full ${getColorClasses(category.color)}`}></div>
-                    <div className={`text-xs font-medium tracking-wide transition-all duration-200 ${
-                      isActive 
-                        ? getActiveClasses(category.color)
-                        : `${getHoverClasses(category.color)} hover:text-white`
-                    } ${isExpanded ? 'opacity-100' : 'opacity-0'}`}>
-                      {category.id.charAt(0).toUpperCase() + category.id.slice(1)}
-                    </div>
-                  </Link>
-                )
-              })}
+               {mainCategories.slice().reverse().map((category, index) => {
+                 const isActive = pathname === category.href || (category.subCategories && category.subCategories.some(sub => pathname === sub.href))
+                 const animationDelay = index * 50 // Stagger animation by 50ms per dot
+                 return (
+                   <Link
+                     key={category.id}
+                     href={category.href}
+                     className={`flex items-center gap-2 group transition-all duration-150 ${
+                       dotsAnimated 
+                         ? 'opacity-100 translate-y-0' 
+                         : 'opacity-0 -translate-y-5'
+                     }`}
+                     style={{
+                       transitionDelay: `${animationDelay}ms`,
+                       transitionTimingFunction: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)'
+                     }}
+                   >
+                     <div className={`w-3 h-3 rounded-full ${getColorClasses(category.color)} transition-transform duration-200 group-hover:scale-110`}></div>
+                     <div className={`text-xs font-medium tracking-wide transition-all duration-200 ${
+                       isActive 
+                         ? getActiveClasses(category.color)
+                         : `${getHoverClasses(category.color)} hover:text-white`
+                     } ${isExpanded ? 'opacity-100' : 'opacity-0'}`}>
+                       {category.id.charAt(0).toUpperCase() + category.id.slice(1)}
+                     </div>
+                   </Link>
+                 )
+               })}
             </div>
           </div>
         </div>
