@@ -2,13 +2,6 @@
 
 // Component Imports  
 import { NavBar } from "@/components/NavBar"
-import { SubNav } from "@/components/SubNav"
-
-const aboutSubNavItems = [
-  { id: "career", label: "Career", href: "/about/career" },
-  { id: "education", label: "Education", href: "/about/education" },
-  { id: "goals", label: "Goals", href: "/about/goals" }
-]
 
 // Career data
 const careerData = [
@@ -249,7 +242,6 @@ export default function CareerPage() {
       <div className="min-h-screen bg-white dark:bg-black">
         <div className="w-full px-6">
           <NavBar />
-          <SubNav items={aboutSubNavItems} color="blue" />
           
           <main className="flex-1 pt-6">
             {/* Career Timeline */}

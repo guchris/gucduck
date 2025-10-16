@@ -12,6 +12,13 @@ type MainCategory = {
   href: string
   color: string
   number: number
+  subCategories?: SubCategory[]
+}
+
+type SubCategory = {
+  id: string
+  label: string
+  href: string
 }
 
 const mainCategories: MainCategory[] = [
@@ -19,7 +26,12 @@ const mainCategories: MainCategory[] = [
     id: 'about',
     href: '/about',
     color: 'blue',
-    number: 1
+    number: 1,
+    subCategories: [
+      { id: 'career', label: 'Career', href: '/about/career' },
+      { id: 'education', label: 'Education', href: '/about/education' },
+      { id: 'goals', label: 'Goals', href: '/about/goals' }
+    ]
   },
   {
     id: 'fashion',
@@ -31,7 +43,12 @@ const mainCategories: MainCategory[] = [
     id: 'food',
     href: '/food',
     color: 'yellow',
-    number: 3
+    number: 3,
+    subCategories: [
+      { id: 'dish-dish', label: 'DishDish', href: '/food/dish-dish' },
+      { id: 'grounded', label: 'Grounded', href: '/food/grounded' },
+      { id: 'recipes', label: 'Recipes', href: '/food/recipes' }
+    ]
   },
   {
     id: 'founder',
@@ -146,29 +163,67 @@ export function NavBar() {
         </Link>
 
         {/* Right: Colored navigation dots */}
-        <div className="transform rotate-90 origin-top-left -mr-16">
-          <div className="flex flex-col items-start">
-            {mainCategories.slice().reverse().map((category) => {
-              const isActive = pathname === category.href
-              return (
-                <Link
-                  key={category.id}
-                  href={category.href}
-                  className="flex items-center gap-2 group transition-all duration-200"
-                >
-                  <div className={`w-3 h-3 rounded-full ${getColorClasses(category.color)}`}></div>
-                  <div className={`text-xs font-medium tracking-wide transition-all duration-200 ${
-                    isActive 
-                      ? getActiveClasses(category.color)
-                      : `${getHoverClasses(category.color)} hover:text-white`
-                  } ${isExpanded ? 'opacity-100' : 'opacity-0'}`}>
-                    {category.id.charAt(0).toUpperCase() + category.id.slice(1)}
-                  </div>
-                </Link>
-              )
-            })}
+        <div className="flex flex-col items-end">
+          {/* Main Navigation */}
+          <div className="transform rotate-90 origin-top-left -mr-16">
+            <div className="flex flex-col items-start">
+              {mainCategories.slice().reverse().map((category) => {
+                const isActive = pathname === category.href || (category.subCategories && category.subCategories.some(sub => pathname === sub.href))
+                return (
+                  <Link
+                    key={category.id}
+                    href={category.href}
+                    className="flex items-center gap-2 group transition-all duration-200"
+                  >
+                    <div className={`w-3 h-3 rounded-full ${getColorClasses(category.color)}`}></div>
+                    <div className={`text-xs font-medium tracking-wide transition-all duration-200 ${
+                      isActive 
+                        ? getActiveClasses(category.color)
+                        : `${getHoverClasses(category.color)} hover:text-white`
+                    } ${isExpanded ? 'opacity-100' : 'opacity-0'}`}>
+                      {category.id.charAt(0).toUpperCase() + category.id.slice(1)}
+                    </div>
+                  </Link>
+                )
+              })}
+            </div>
           </div>
         </div>
+        
+        {/* Sub-Navigation - Left aligned within overall navbar */}
+        {(() => {
+          const activeCategory = mainCategories.find(category => 
+            pathname === category.href || (category.subCategories && category.subCategories.some(sub => pathname === sub.href))
+          )
+          
+          if (activeCategory && activeCategory.subCategories && isExpanded) {
+            return (
+              <div className="absolute bottom-0 left-0">
+                <div className="flex items-center gap-1">
+                  {activeCategory.subCategories.map((subCategory) => {
+                    const isSubActive = pathname === subCategory.href
+                    return (
+                      <Link
+                        key={subCategory.id}
+                        href={subCategory.href}
+                        className="group transition-all duration-200"
+                      >
+                        <div className={`text-xs font-medium tracking-wide transition-all duration-200 ${
+                          isSubActive 
+                            ? getActiveClasses(activeCategory.color)
+                            : `${getHoverClasses(activeCategory.color)} hover:text-white`
+                        }`}>
+                          {subCategory.label}
+                        </div>
+                      </Link>
+                    )
+                  })}
+                </div>
+              </div>
+            )
+          }
+          return null
+        })()}
       </div>
     </div>
   );

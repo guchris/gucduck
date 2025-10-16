@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 
 // Component Imports
 import { NavBar } from "@/components/NavBar";
-import { SubNav } from "@/components/SubNav";
 
 // Firebase Imports
 import { collection, getDocs } from "firebase/firestore";
@@ -13,12 +12,6 @@ import { db } from "@/lib/firebase";
 
 // Lucide Imports
 import { ArrowDown, ArrowUp } from "lucide-react";
-
-const foodSubNavItems = [
-  { id: "dish-dish", label: "DishDish", href: "/food/dish-dish" },
-  { id: "grounded", label: "Grounded", href: "/food/grounded" },
-  { id: "recipes", label: "Recipes", href: "/food/recipes" }
-];
 
 type DishScores = {
   [category: string]: { [index: string]: number };
@@ -131,8 +124,7 @@ export default function DishDishPage() {
     <>
       <div className="min-h-screen bg-white dark:bg-black">
         <div className="w-full px-6">
-        <NavBar />
-        <SubNav items={foodSubNavItems} color="yellow" />
+          <NavBar />
           
           <main className="flex-1 pt-6">
 
