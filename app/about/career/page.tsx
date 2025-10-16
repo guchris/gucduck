@@ -13,7 +13,7 @@ const careerData = [
     period: "Mar 2025 - Present",
     type: "Full-time",
     color: "blue",
-    description: "Leading strategic AI initiatives and product development across Amazon's engineering ecosystem.",
+    description: "Driving AI research, enablement, and community initiatives across the software builder experience.",
     achievements: [
       "Achieved XX% weekly AI tool adoption (+27% QoQ) across Amazon by creating and delivering an AI playbook to 1,200+ Software Development Managers through documentation and workshops",
       "Drove strategic AI investment decisions across all of Amazon through monthly research program, analyzing 15,000+ engineers' sentiment and usage patterns across the AI tools portfolio",
@@ -22,10 +22,10 @@ const careerData = [
   },
   {
     id: 2,
-    title: "Gap Year - Career Break",
-    company: "Travel & Exploration",
+    title: "Gap Year",
+    company: "Career Break",
     location: "35 cities in 22 countries",
-    period: "Jul 2023 - Jul 2024",
+    period: "Jul 2023 - Dec 2024",
     type: "Full-time",
     color: "blue",
     description: "Traveled to 35 cities in 22 countries."
@@ -48,11 +48,11 @@ const careerData = [
       "Served as the inaugural member of a diversity group, actively contributing to planning and organizing events to promote inclusivity and diversity within the company."
     ],
     links: [
-      "TaxBit Digital W9/W8",
-      "TaxBit Digital W9/W8 Case Study", 
-      "TaxBit Tax Center Solutions",
-      "TaxBit API Guides",
-      "TaxBit API Reference"
+      { text: "TaxBit Digital W9/W8", url: "https://www.taxbit.com/digital-w9-w8/" },
+      { text: "TaxBit Digital W9/W8 Case Study", url: "https://www.taxbit.com/case-studies/uphold-case-study/" },
+      { text: "TaxBit Tax Center Solutions", url: "https://www.taxbit.com/white-papers/digital-asset-compliance/" },
+      { text: "TaxBit API Guides", url: "https://apidocs.taxbit.com/docs/getting-started" },
+      { text: "TaxBit API Reference", url: "https://apidocs.taxbit.com/reference/auth-token" }
     ],
     testimonial: {
       text: "Chris did great work at TaxBit, and I recommend him for any organization. He possesses a strong work ethic, high attention to detail, and a remarkable ability to quickly grasp complex concepts, ranging from technical to regulatory.",
@@ -248,33 +248,36 @@ export default function CareerPage() {
             <div className="mb-8">
               <div className="w-full space-y-6">
                 {careerData.map((job) => (
-                  <div key={job.id} className="group">
+                  <div key={job.id}>
                     <div className="flex items-start gap-2">
                       {/* Dot */}
                       <div className={`w-3 h-3 rounded-full ${getColorClasses(job.color)} flex-shrink-0 mt-0.5`}></div>
                       
                       {/* Content */}
                       <div className="flex-1 min-w-0">
-                        {/* Title and Company */}
-                        <div className="flex items-center gap-2 mb-1">
-                          <h4 className={`text-xs font-medium transition-all duration-200 text-black dark:text-white ${getHoverClasses(job.color)}`}>
+                        {/* Title */}
+                        <div className="mb-1">
+                          <h4 className={`text-xs font-medium text-black dark:text-white`}>
                             {job.title}
                           </h4>
-                          <span className="text-xs text-gray-500 dark:text-gray-400">•</span>
-                          <span className="text-xs text-gray-500 dark:text-gray-400">{job.company}</span>
                         </div>
                         
-                        {/* Location, Period, Type */}
-                        <div className="flex items-center gap-2 mb-2">
-                          <span className="text-xs text-gray-500 dark:text-gray-400">{job.location}</span>
+                        {/* Company and Period */}
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-xs text-gray-500 dark:text-gray-400">{job.company}</span>
                           <span className="text-xs text-gray-500 dark:text-gray-400">•</span>
                           <span className="text-xs text-gray-500 dark:text-gray-400">{job.period}</span>
+                        </div>
+                        
+                        {/* Location and Type */}
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="text-xs text-gray-500 dark:text-gray-400">{job.location}</span>
                           <span className="text-xs text-gray-500 dark:text-gray-400">•</span>
                           <span className="text-xs text-gray-500 dark:text-gray-400">{job.type}</span>
                         </div>
                         
                         {/* Description */}
-                        <p className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed mb-3">
+                        <p className="text-xs text-black dark:text-white leading-relaxed mb-3">
                           {job.description}
                         </p>
                         
@@ -282,7 +285,7 @@ export default function CareerPage() {
                         {job.achievements && (
                           <div className="space-y-2 mb-3">
                             {job.achievements.map((achievement, index) => (
-                              <p key={index} className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed pl-2 border-l border-gray-200 dark:border-gray-700">
+                              <p key={index} className="text-xs text-black dark:text-white leading-relaxed pl-2 border-l border-gray-200 dark:border-gray-700">
                                 {achievement}
                               </p>
                             ))}
@@ -292,11 +295,22 @@ export default function CareerPage() {
                         {/* Links */}
                         {job.links && (
                           <div className="space-y-2 mb-3">
-                            <p className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed font-medium">Links:</p>
+                            <p className="text-xs text-black dark:text-white leading-relaxed font-medium">Links:</p>
                             <div className="space-y-1">
                               {job.links.map((link, index) => (
-                                <p key={index} className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed pl-2 border-l border-gray-200 dark:border-gray-700">
-                                  {link}
+                                <p key={index} className="text-xs text-black dark:text-white leading-relaxed pl-2 border-l border-gray-200 dark:border-gray-700">
+                                  {typeof link === 'string' ? (
+                                    link
+                                  ) : (
+                                    <a 
+                                      href={link.url} 
+                                      target="_blank" 
+                                      rel="noopener noreferrer"
+                                      className="text-blue-600 dark:text-blue-400 hover:underline"
+                                    >
+                                      {link.text}
+                                    </a>
+                                  )}
                                 </p>
                               ))}
                             </div>
