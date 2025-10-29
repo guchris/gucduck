@@ -10,8 +10,10 @@ const images = [
   "/images/home/portfolio-3.gif",
   "/images/home/portfolio-4.gif",
   "/images/home/portfolio-5.jpg",
-  "/images/home/portfolio-6.jpg",
-  "/images/home/portfolio-7.jpg"
+  "/images/home/portfolio-6.gif",
+  "/images/home/portfolio-7.jpg",
+  "/images/home/portfolio-8.jpg",
+  "/images/home/portfolio-9.gif"
 ]
 
 
@@ -28,19 +30,19 @@ export default function Home() {
               {images.map((image, index) => (
                 <div 
                   key={index} 
-                  className="bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-300 mb-4 overflow-hidden break-inside-avoid"
+                  className="bg-white dark:bg-gray-900 mb-4 overflow-hidden break-inside-avoid group cursor-pointer rounded-lg"
                 >
                   {image.endsWith('.gif') ? (
                     <img
                       src={image}
                       alt={`Image ${index + 1}`}
-                      className="w-full h-auto object-cover rounded-lg"
+                      className="w-full h-auto object-cover transition-transform duration-300 group-hover:scale-105"
                     />
                   ) : (
                     <img
                       src={image}
                       alt={`Image ${index + 1}`}
-                      className="w-full h-auto object-cover rounded-lg"
+                      className="w-full h-auto object-cover transition-transform duration-300 group-hover:scale-105"
                     />
                   )}
                 </div>
