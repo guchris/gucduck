@@ -9,11 +9,12 @@ const images = [
   "/images/home/portfolio-2.jpg",
   "/images/home/portfolio-3.gif",
   "/images/home/portfolio-4.gif",
-  "/images/home/portfolio-5.jpg",
+  "/images/home/portfolio-5.gif",
   "/images/home/portfolio-6.gif",
   "/images/home/portfolio-7.jpg",
   "/images/home/portfolio-8.jpg",
-  "/images/home/portfolio-9.gif"
+  "/images/home/portfolio-9.gif",
+  "/images/home/portfolio-10.gif"
 ]
 
 
