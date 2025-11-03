@@ -21,12 +21,28 @@ const images = [
 
 
 export default function Home() {
-  const [imageDelays, setImageDelays] = useState<number[]>([]);
+  const [isVisible, setIsVisible] = useState(false);
+  const [shuffledImages, setShuffledImages] = useState<string[]>(images);
 
   useEffect(() => {
-    // Generate random delays only on client side
-    const delays = images.map(() => Math.random() * 2000);
-    setImageDelays(delays);
+    // Shuffle images array on client side
+    const shuffleArray = (array: string[]) => {
+      const shuffled = [...array];
+      for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      }
+      return shuffled;
+    };
+
+    setShuffledImages(shuffleArray(images));
+
+    // Show images after nav is displayed (300ms delay)
+    const timer = setTimeout(() => {
+      setIsVisible(true);
+    }, 300);
+
+    return () => clearTimeout(timer);
   }, []);
 
   return (
@@ -38,34 +54,28 @@ export default function Home() {
 
             {/* Masonry Grid Layout */}
             <div className="columns-2 sm:columns-3 lg:columns-4 xl:columns-6 gap-4 space-y-4">
-              {images.map((image, index) => {
-                const randomDelay = imageDelays[index] || 0;
-                
-                return (
-                  <div 
-                    key={index} 
-                    className="bg-white dark:bg-gray-900 mb-4 overflow-hidden break-inside-avoid group cursor-pointer rounded-lg opacity-0 animate-fade-in"
-                    style={{
-                      animationDelay: `${randomDelay}ms`,
-                      animationFillMode: 'forwards'
-                    }}
-                  >
-                    {image.endsWith('.gif') ? (
-                      <img
-                        src={image}
-                        alt={`Image ${index + 1}`}
-                        className="w-full h-auto object-cover transition-transform duration-300 group-hover:scale-105"
-                      />
-                    ) : (
-                      <img
-                        src={image}
-                        alt={`Image ${index + 1}`}
-                        className="w-full h-auto object-cover transition-transform duration-300 group-hover:scale-105"
-                      />
-                    )}
-                  </div>
-                );
-              })}
+              {shuffledImages.map((image, index) => (
+                <div 
+                  key={image} 
+                  className={`bg-white dark:bg-gray-900 mb-4 overflow-hidden break-inside-avoid group cursor-pointer rounded-lg transition-opacity duration-500 ${
+                    isVisible ? 'opacity-100' : 'opacity-0'
+                  }`}
+                >
+                  {image.endsWith('.gif') ? (
+                    <img
+                      src={image}
+                      alt={`Image ${index + 1}`}
+                      className="w-full h-auto object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
+                  ) : (
+                    <img
+                      src={image}
+                      alt={`Image ${index + 1}`}
+                      className="w-full h-auto object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
+                  )}
+                </div>
+              ))}
             </div>
 
           </main>
