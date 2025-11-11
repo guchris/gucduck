@@ -53,7 +53,7 @@ export default function Home() {
           <main className="flex-1">
 
             {/* Masonry Grid Layout */}
-            <div className="columns-2 sm:columns-3 lg:columns-4 xl:columns-6 gap-4 space-y-4">
+            <div className="columns-2 sm:columns-4 lg:columns-6 gap-4 space-y-4">
               {shuffledImages.map((image, index) => (
                 <div 
                   key={image} 
