@@ -7,6 +7,7 @@ import { DuckCanvas } from "@/components/DuckCanvas"
 import { useState, useEffect } from "react"
 import { Duck } from "@/lib/types"
 import { getAllDucks, saveDuck } from "@/lib/duckStorage"
+import { Button } from "@/components/ui/button"
 
 export default function Home() {
   const [ducks, setDucks] = useState<Duck[]>([])
@@ -56,12 +57,13 @@ export default function Home() {
 
         {/* Draw a Duck text */}
         <div className="fixed bottom-6 right-6 z-20 pointer-events-auto">
-          <button
+          <Button
             onClick={() => setShowCanvas(!showCanvas)}
-            className="text-xs font-medium text-gray-900 dark:text-white hover:bg-yellow-500 hover:text-white transition-colors cursor-pointer"
+            variant="outline"
+            className="shadow-none bg-white dark:bg-black text-gray-900 dark:text-white hover:bg-yellow-500 hover:text-white transition-all duration-200"
           >
             Draw a Duck
-          </button>
+          </Button>
         </div>
       </div>
 

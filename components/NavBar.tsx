@@ -144,7 +144,7 @@ export function NavBar() {
       'gray': 'hover:bg-gray-500',
       'black': 'hover:bg-black'
     }
-    return hoverMap[color] || 'hover:bg-gray-500'
+    return `${hoverMap[color] || 'hover:bg-gray-500'} hover:px-1 hover:py-1 hover:rounded`
   }
 
   const getActiveClasses = (color: string) => {
@@ -158,22 +158,22 @@ export function NavBar() {
       'gray': 'bg-gray-500 text-white',
       'black': 'bg-black text-white'
     }
-    return activeMap[color] || 'bg-gray-500 text-white'
+    return `${activeMap[color] || 'bg-gray-500 text-white'} px-1 py-1 rounded`
   }
 
   return (
     <div className="w-full sticky top-0 bg-transparent transition-all duration-300 z-50">
         <div className="flex items-start justify-between transition-all duration-300 py-4">
         {/* Left: Corner dot with name */}
-        <Link href="/" className="flex items-start gap-2 group">
+        <Link href="/" className="flex items-center gap-2 group">
           <div className={`w-3 h-3 rounded-full transition-all duration-500 ${getColorClasses(colors[currentColorIndex])} group-hover:scale-110`}></div>
-          <div className={`text-xs font-medium transition-all duration-200 ${getHoverClasses(colors[currentColorIndex])} hover:text-white -mt-0.5`}>
-            Gucduck
-          </div>
+           <div className={`text-xs font-medium transition-all duration-200 px-1 py-1 ${getHoverClasses(colors[currentColorIndex])} hover:text-white`}>
+             Gucduck
+           </div>
         </Link>
 
         {/* Right: Colored navigation dots */}
-        <div className="flex flex-col items-end">
+        <div className="flex flex-col items-end mt-1.5">
           {/* Main Navigation */}
           <div className="transform rotate-90 origin-top-left -mr-16">
             <div className="flex flex-col items-start">
@@ -186,7 +186,7 @@ export function NavBar() {
                      href={category.href}
                      className={`flex items-center gap-2 group transition-all duration-150 ${
                        dotsAnimated 
-                         ? 'opacity-100 translate-y-0' 
+                         ? 'opacity-100 translate-y-0'
                          : 'opacity-0 -translate-y-5'
                      }`}
                      style={{
@@ -195,7 +195,7 @@ export function NavBar() {
                      }}
                    >
                      <div className={`w-3 h-3 rounded-full ${getColorClasses(category.color)} transition-transform duration-200 group-hover:scale-110`}></div>
-                     <div className={`text-xs font-medium tracking-wide transition-all duration-200 ${
+                     <div className={`text-xs font-medium tracking-wide transition-all duration-200 px-1 ${
                        isActive 
                          ? getActiveClasses(category.color)
                          : `${getHoverClasses(category.color)} hover:text-white`
@@ -227,13 +227,13 @@ export function NavBar() {
                         href={subCategory.href}
                         className="group transition-all duration-200"
                       >
-                        <div className={`text-xs font-medium tracking-wide transition-all duration-200 ${
-                          isSubActive 
-                            ? getActiveClasses(activeCategory.color)
-                            : `${getHoverClasses(activeCategory.color)} hover:text-white`
-                        }`}>
-                          {subCategory.label}
-                        </div>
+                         <div className={`text-xs font-medium tracking-wide transition-all duration-200 px-1 py-1 ${
+                           isSubActive 
+                             ? getActiveClasses(activeCategory.color)
+                             : `${getHoverClasses(activeCategory.color)} hover:text-white`
+                         }`}>
+                           {subCategory.label}
+                         </div>
                       </Link>
                     )
                   })}
