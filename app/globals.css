@@ -120,3 +120,22 @@
   }
 }
 
+@keyframes duck-wade {
+  0%, 100% {
+    transform: translate(-50%, -50%) translate(0px, 0px) rotate(0deg);
+  }
+  25% {
+    transform: translate(-50%, -50%) translate(3px, -4px) rotate(1deg);
+  }
+  50% {
+    transform: translate(-50%, -50%) translate(0px, -6px) rotate(0deg);
+  }
+  75% {
+    transform: translate(-50%, -50%) translate(-3px, -4px) rotate(-1deg);
+  }
+}
+
+.duck-wade {
+  animation: duck-wade ease-in-out infinite;
+}
+

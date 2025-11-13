@@ -168,7 +168,7 @@ export function NavBar() {
         <Link href="/" className="flex items-start gap-2 group">
           <div className={`w-3 h-3 rounded-full transition-all duration-500 ${getColorClasses(colors[currentColorIndex])} group-hover:scale-110`}></div>
           <div className={`text-xs font-medium transition-all duration-200 ${getHoverClasses(colors[currentColorIndex])} hover:text-white -mt-0.5`}>
-            Chris Gu
+            Gucduck
           </div>
         </Link>
 
