@@ -185,11 +185,11 @@ export function DuckCanvas({ onSave, onClose, isOpen }: DuckCanvasProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="max-w-lg p-6">
+      <DialogContent className="max-w-[432px] p-4 sm:p-6 w-[calc(100vw-2rem)] sm:w-auto">
         <DialogTitle className="sr-only">Draw a Duck</DialogTitle>
-        <div className="flex flex-col gap-4 items-center">
+        <div className="flex flex-col gap-4 w-full">
           {/* Color Palette - Horizontal Row */}
-          <div className="flex items-center gap-2" style={{ width: "400px" }}>
+          <div className="flex items-center gap-2 w-full max-w-[400px]">
             {colorConfig.map(({ color: colorName, hex }) => (
               <button
                 key={colorName}
@@ -198,7 +198,7 @@ export function DuckCanvas({ onSave, onClose, isOpen }: DuckCanvasProps) {
                   e.stopPropagation()
                   setColor(hex)
                 }}
-                className={`w-4 h-4 rounded-full transition-all duration-200 ${getColorClass(colorName)} hover:scale-110 cursor-pointer ${
+                className={`w-5 h-5 rounded-full transition-all duration-200 ${getColorClass(colorName)} hover:scale-110 cursor-pointer ${
                   color === hex ? 'scale-110 ring-2 ring-foreground' : ''
                 }`}
                 type="button"
@@ -207,7 +207,7 @@ export function DuckCanvas({ onSave, onClose, isOpen }: DuckCanvasProps) {
           </div>
 
           {/* Canvas Area */}
-          <div className="w-full flex justify-center">
+          <div className="w-full">
             <canvas
               ref={canvasRef}
               width={400}
@@ -223,18 +223,20 @@ export function DuckCanvas({ onSave, onClose, isOpen }: DuckCanvasProps) {
               style={{ 
                 touchAction: "none",
                 display: "block",
-                width: "400px",
-                height: "400px",
+                width: "100%",
+                maxWidth: "400px",
+                height: "auto",
+                aspectRatio: "1",
               }}
             />
           </div>
 
           {/* Add to Pond Button */}
-          <div className="flex justify-end" style={{ width: "400px" }}>
+          <div className="w-full max-w-[400px]">
             <Button
               onClick={handleSave}
+              className="w-full"
             >
-              <Plus className="w-4 h-4" />
               Add to Pond
             </Button>
           </div>

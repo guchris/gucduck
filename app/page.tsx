@@ -7,8 +7,6 @@ import { DuckCanvas } from "@/components/DuckCanvas"
 import { useState, useEffect } from "react"
 import { Duck } from "@/lib/types"
 import { getAllDucks, saveDuck } from "@/lib/duckStorage"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
 
 export default function Home() {
   const [ducks, setDucks] = useState<Duck[]>([])
@@ -46,26 +44,14 @@ export default function Home() {
           <NavBar />
         </div>
 
-        {/* Floating action buttons */}
-        <div className="fixed bottom-6 left-6 right-6 flex gap-2 justify-center z-20 md:left-auto md:right-6 md:justify-end pointer-events-auto">
-          <Button
+        {/* Draw a Duck text */}
+        <div className="fixed bottom-6 right-6 z-20 pointer-events-auto">
+          <button
             onClick={() => setShowCanvas(!showCanvas)}
-            variant="outline"
-            className="border border-gray-200 dark:border-gray-700 rounded-none py-2 px-3 text-xs font-medium hover:bg-yellow-500 hover:text-white transition-colors"
+            className="text-xs font-medium text-gray-900 dark:text-white hover:bg-yellow-500 hover:text-white transition-colors cursor-pointer"
           >
-            <span className="hidden sm:inline">Draw a Duck</span>
-            <span className="sm:hidden">Draw a Duck</span>
-          </Button>
-          <Button
-            asChild
-            variant="outline"
-            className="border border-gray-200 dark:border-gray-700 rounded-none py-2 px-3 text-xs font-medium hover:bg-yellow-500 hover:text-white transition-colors"
-          >
-            <Link href="/duck">
-              <span className="hidden sm:inline">Duck Gallery</span>
-              <span className="sm:hidden">Duck Gallery</span>
-            </Link>
-          </Button>
+            Draw a Duck
+          </button>
         </div>
       </div>
 
