@@ -16,6 +16,16 @@ export default function Home() {
   useEffect(() => {
     // Load ducks from localStorage
     setDucks(getAllDucks())
+    
+    // Prevent scrolling on the home page
+    document.body.style.overflow = 'hidden'
+    document.documentElement.style.overflow = 'hidden'
+    
+    return () => {
+      // Restore scrolling when component unmounts
+      document.body.style.overflow = ''
+      document.documentElement.style.overflow = ''
+    }
   }, [])
 
   const handleSaveDuck = (imageData: string) => {
@@ -34,12 +44,12 @@ export default function Home() {
   return (
     <>
       {/* Full screen pond background */}
-      <div className="fixed inset-0">
+      <div className="fixed inset-0 overflow-hidden">
         <Pond ducks={ducks} newDuckIds={newDuckIds} />
       </div>
 
       {/* Overlay content */}
-      <div className="relative z-10 min-h-screen pointer-events-none">
+      <div className="fixed inset-0 z-10 pointer-events-none overflow-hidden">
         <div className="w-full px-6 pointer-events-auto">
           <NavBar />
         </div>
