@@ -24,6 +24,7 @@ import {
 
 // UI Components
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import {
   Table,
   TableBody,
@@ -207,7 +208,9 @@ export default function PongLeaderboardPage() {
             {/* Scores Table */}
             <div>
               {loading ? (
-                <div className="text-center py-4 text-sm text-muted-foreground">Loading...</div>
+                <div className="flex items-center justify-center py-8">
+                  <Spinner className="size-6" />
+                </div>
               ) : scores.length === 0 ? (
                 <div className="text-center py-4 text-sm text-muted-foreground">No scores found.</div>
               ) : (
