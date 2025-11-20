@@ -1,7 +1,7 @@
 "use client"
 
 // React Imports
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useRef } from "react"
 
 // Next Imports
 import Link from "next/link"
@@ -45,7 +45,7 @@ const mainCategories: MainCategory[] = [
     color: 'yellow',
     number: 3,
     subCategories: [
-      { id: 'dish-dish', label: 'DishDish', href: '/food/dish-dish' },
+      { id: 'dish-dish', label: 'Sunday Suppers', href: '/food/dish-dish' },
       { id: 'grounded', label: 'Grounded', href: '/food/grounded' },
       { id: 'recipes', label: 'Recipes', href: '/food/recipes' }
     ]
@@ -82,7 +82,12 @@ const mainCategories: MainCategory[] = [
   }
 ]
 
-export function NavBar() {
+interface NavBarProps {
+  hitLetters?: Set<string>
+  onLetterRef?: (letterId: string, element: HTMLElement | null) => void
+}
+
+export function NavBar({ hitLetters = new Set(), onLetterRef }: NavBarProps) {
   const [currentColorIndex, setCurrentColorIndex] = useState(0)
   const [isExpanded, setIsExpanded] = useState(true)
   const [dotsAnimated, setDotsAnimated] = useState(false)
@@ -166,9 +171,32 @@ export function NavBar() {
         <div className="flex items-start justify-between transition-all duration-300 py-4">
         {/* Left: Corner dot with name */}
         <Link href="/" className="flex items-center gap-2 group">
-          <div className={`w-3 h-3 rounded-full transition-all duration-500 ${getColorClasses(colors[currentColorIndex])} group-hover:scale-110`}></div>
+          <div
+            ref={(el) => onLetterRef?.("gucduck-dot", el)}
+            data-letter-id="gucduck-dot"
+            className={`w-3 h-3 rounded-full transition-all duration-500 ${getColorClasses(colors[currentColorIndex])} group-hover:scale-110 ${
+              hitLetters.has("gucduck-dot") ? "opacity-30" : ""
+            }`}
+          ></div>
            <div className={`text-xs font-medium transition-all duration-200 px-1 py-1 ${getHoverClasses(colors[currentColorIndex])} hover:text-white`}>
-             Gucduck
+             {"Gucduck".split("").map((letter, idx) => {
+               // Skip spaces
+               if (letter === " ") {
+                 return <span key={`gucduck-space-${idx}`}> </span>
+               }
+               const letterId = `gucduck-${idx}-${letter}`
+               const isHit = hitLetters.has(letterId)
+               return (
+                 <span
+                   key={letterId}
+                   ref={(el) => onLetterRef?.(letterId, el)}
+                   data-letter-id={letterId}
+                   className={isHit ? "opacity-30 transition-opacity duration-200" : "transition-opacity duration-200"}
+                 >
+                   {letter}
+                 </span>
+               )
+             })}
            </div>
         </Link>
 
@@ -194,13 +222,36 @@ export function NavBar() {
                        transitionTimingFunction: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)'
                      }}
                    >
-                     <div className={`w-3 h-3 rounded-full ${getColorClasses(category.color)} transition-transform duration-200 group-hover:scale-110`}></div>
+                     <div
+                       ref={(el) => onLetterRef?.(`${category.id}-dot`, el)}
+                       data-letter-id={`${category.id}-dot`}
+                       className={`w-3 h-3 rounded-full ${getColorClasses(category.color)} transition-transform duration-200 group-hover:scale-110 ${
+                         hitLetters.has(`${category.id}-dot`) ? "opacity-30" : ""
+                       }`}
+                     ></div>
                      <div className={`text-xs font-medium tracking-wide transition-all duration-200 px-1 ${
                        isActive 
                          ? getActiveClasses(category.color)
                          : `${getHoverClasses(category.color)} hover:text-white`
                      } ${isExpanded ? 'opacity-100' : 'opacity-0'}`}>
-                       {category.id.charAt(0).toUpperCase() + category.id.slice(1)}
+                       {(category.id.charAt(0).toUpperCase() + category.id.slice(1)).split("").map((letter, idx) => {
+                         // Skip spaces
+                         if (letter === " ") {
+                           return <span key={`${category.id}-space-${idx}`}> </span>
+                         }
+                         const letterId = `${category.id}-${idx}-${letter}`
+                         const isHit = hitLetters.has(letterId)
+                         return (
+                           <span
+                             key={letterId}
+                             ref={(el) => onLetterRef?.(letterId, el)}
+                             data-letter-id={letterId}
+                             className={isHit ? "opacity-30 transition-opacity duration-200" : "transition-opacity duration-200"}
+                           >
+                             {letter}
+                           </span>
+                         )
+                       })}
                      </div>
                    </Link>
                  )
@@ -232,7 +283,24 @@ export function NavBar() {
                              ? getActiveClasses(activeCategory.color)
                              : `${getHoverClasses(activeCategory.color)} hover:text-white`
                          }`}>
-                           {subCategory.label}
+                           {subCategory.label.split("").map((letter, idx) => {
+                             // Skip spaces
+                             if (letter === " ") {
+                               return <span key={`${subCategory.id}-space-${idx}`}> </span>
+                             }
+                             const letterId = `${subCategory.id}-${idx}-${letter}`
+                             const isHit = hitLetters.has(letterId)
+                             return (
+                               <span
+                                 key={letterId}
+                                 ref={(el) => onLetterRef?.(letterId, el)}
+                                 data-letter-id={letterId}
+                                 className={isHit ? "opacity-30 transition-opacity duration-200" : "transition-opacity duration-200"}
+                               >
+                                 {letter}
+                               </span>
+                             )
+                           })}
                          </div>
                       </Link>
                     )

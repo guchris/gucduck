@@ -41,13 +41,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 
 type DishScores = {
   [category: string]: { [index: string]: number };
@@ -109,30 +102,13 @@ function getIndividualScores(scores: DishScores) {
 
 function formatDate(dateString: string): string {
   const [month, day, year] = dateString.split('/').map(Number);
-  return `${month}/${day}/${year.toString().slice(-2)}`;
+  const monthStr = month.toString().padStart(2, '0');
+  const dayStr = day.toString().padStart(2, '0');
+  const yearStr = year.toString().slice(-2);
+  return `${monthStr}/${dayStr}/${yearStr}`;
 }
 
 const columns: ColumnDef<Dish>[] = [
-  {
-    id: "image",
-    header: () => null,
-    cell: ({ row }) => {
-      const images = row.original.images;
-      if (Array.isArray(images) && images.length > 0) {
-        return (
-          <img
-            src={images[0]}
-            alt={row.original.name}
-            className="w-16 h-16 object-cover rounded-md flex-shrink-0 min-w-16"
-          />
-        );
-      }
-      return <div className="text-muted-foreground">—</div>;
-    },
-    meta: {
-      className: "w-16 min-w-16",
-    },
-  },
   {
     accessorKey: "name",
     header: ({ column }) => {
@@ -284,8 +260,6 @@ export default function DishDishPage() {
       desc: true,
     },
   ]);
-  const [selectedDish, setSelectedDish] = useState<Dish | null>(null);
-  const [dialogOpen, setDialogOpen] = useState(false);
 
   useEffect(() => {
     async function fetchDishes() {
@@ -315,7 +289,7 @@ export default function DishDishPage() {
         },
       ],
       pagination: {
-        pageSize: 10,
+        pageSize: 50,
       },
     },
   });
@@ -332,107 +306,13 @@ export default function DishDishPage() {
             <div className="mb-12">
               <div className="space-y-4">
                 <p className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">
-                  Dish Dish is me and my best friend Anjuli's favorite tradition. Every so often, we pick a recipe from social media, split the grocery list, and meet up at my place to cook, catch up, and laugh about everything and nothing. It's not just about the food (though that part's great) - it's our way of making time for each other. We always snap pics of our creations, eat way too much, and then rate the dish like we're judges on a cooking show.
+                  Sunday Suppers is me and my best friend Anjuli's favorite tradition. Every so often, we pick a recipe from social media, split the grocery list, and meet up at my place to cook, catch up, and laugh about everything and nothing. It's not just about the food (though that part's great) - it's our way of making time for each other. We always snap pics of our creations, eat way too much, and then rate the dish like we're judges on a cooking show.
                 </p>
-              </div>
-            </div>
-
-            {/* Scoring System Section */}
-            <div className="mb-8">
-              <div className="border-t border-gray-200 dark:border-gray-700 pt-6 mb-6">
-                <h3 className="text-xs font-medium text-gray-900 dark:text-white">Scoring System</h3>
-              </div>
-              
-              <div className="space-y-4 mb-6">
-                <p className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">
-                  A dish's score is derived from the combined points assigned by both Anjuli and me in the following categories.
-                </p>
-                
-                <div className="grid gap-4 md:grid-cols-2">
-                  {/* Taste */}
-                  <div className="group">
-                    <div className="flex items-start gap-2">
-                      <div className="w-3 h-3 rounded-full bg-yellow-500 flex-shrink-0 mt-0.5"></div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-1">
-                          <h4 className="text-xs font-medium transition-all duration-200 text-black dark:text-white hover:bg-yellow-500 hover:text-white">
-                            Taste
-                          </h4>
-                          <span className="text-xs text-gray-500 dark:text-gray-400">•</span>
-                          <span className="text-xs text-gray-500 dark:text-gray-400">10 pts</span>
-                        </div>
-                        <p className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">
-                      The overall flavor profile and how enjoyable the dish is. Does the food taste good? Does the dish come together?
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Appearance */}
-                  <div className="group">
-                    <div className="flex items-start gap-2">
-                      <div className="w-3 h-3 rounded-full bg-pink-500 flex-shrink-0 mt-0.5"></div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-1">
-                          <h4 className="text-xs font-medium transition-all duration-200 text-black dark:text-white hover:bg-pink-500 hover:text-white">
-                            Appearance
-                          </h4>
-                          <span className="text-xs text-gray-500 dark:text-gray-400">•</span>
-                          <span className="text-xs text-gray-500 dark:text-gray-400">5 pts</span>
-                        </div>
-                        <p className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">
-                      The visual appeal and arrangement of the dish. Is the food Instagram-worthy? Does the dish come together?
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Effort */}
-                  <div className="group">
-                    <div className="flex items-start gap-2">
-                      <div className="w-3 h-3 rounded-full bg-green-500 flex-shrink-0 mt-0.5"></div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-1">
-                          <h4 className="text-xs font-medium transition-all duration-200 text-black dark:text-white hover:bg-green-500 hover:text-white">
-                            Effort
-                          </h4>
-                          <span className="text-xs text-gray-500 dark:text-gray-400">•</span>
-                          <span className="text-xs text-gray-500 dark:text-gray-400">5 pts</span>
-                        </div>
-                        <p className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">
-                      The dedication and skill required in preparing the dish. How long did the dish demand? How labor-intensive or intricate was the process?
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Misc */}
-                  <div className="group">
-                    <div className="flex items-start gap-2">
-                      <div className="w-3 h-3 rounded-full bg-purple-500 flex-shrink-0 mt-0.5"></div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-1">
-                          <h4 className="text-xs font-medium transition-all duration-200 text-black dark:text-white hover:bg-purple-500 hover:text-white">
-                            Misc
-                          </h4>
-                          <span className="text-xs text-gray-500 dark:text-gray-400">•</span>
-                          <span className="text-xs text-gray-500 dark:text-gray-400">5 pts</span>
-                        </div>
-                        <p className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">
-                      The memorability and creativity of the dish. Is the food made in a creative way? Is it a unique cooking experience?
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
 
             {/* Dishes Table */}
-            <div className="mb-8">
-              <div className="border-t border-gray-200 dark:border-gray-700 pt-6 mb-6">
-                <h3 className="text-xs font-medium text-gray-900 dark:text-white">Dishes</h3>
-              </div>
+            <div>
               
             {loading ? (
                 <div className="text-center py-4 text-sm text-muted-foreground">Loading...</div>
@@ -469,11 +349,6 @@ export default function DishDishPage() {
                             <TableRow
                               key={row.id}
                               data-state={row.getIsSelected() && "selected"}
-                              onClick={() => {
-                                setSelectedDish(row.original);
-                                setDialogOpen(true);
-                              }}
-                              className="cursor-pointer"
                             >
                               {row.getVisibleCells().map((cell) => (
                                 <TableCell 
@@ -521,117 +396,11 @@ export default function DishDishPage() {
                   </div>
                 </div>
               )}
-              </div>
+            </div>
 
       </main>
     </div>
-                            </div>
-                            
-      {/* Dish Detail Dialog */}
-      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="max-w-2xl w-[calc(100%-2rem)] sm:w-full max-h-[90vh] overflow-y-auto border-gray-200 dark:border-gray-700">
-          {selectedDish && (
-            <>
-              <DialogHeader>
-                <DialogTitle>{selectedDish.name}</DialogTitle>
-                <DialogDescription>
-                  {formatDate(selectedDish.date)} • {sumScores(selectedDish.scores).toFixed(2)} pts total
-                </DialogDescription>
-              </DialogHeader>
-              
-              <div className="space-y-6">
-                {/* Large Image */}
-                {Array.isArray(selectedDish.images) && selectedDish.images.length > 0 && (
-                  <div className="w-full">
-                    <img
-                      src={selectedDish.images[0]}
-                      alt={selectedDish.name}
-                      className="w-full h-auto rounded-lg object-cover"
-                                    />
-                                  </div>
-                                )}
-                                
-                {/* Score Breakdown */}
-                <div className="space-y-4">
-                  <h3 className="text-sm font-semibold">Score Breakdown</h3>
-                  <div className="grid grid-cols-2 gap-4">
-                    {(() => {
-                      const categoryScores = getCategoryScores(selectedDish.scores);
-                      const individualScores = getIndividualScores(selectedDish.scores);
-                      const colorClasses: { [key: string]: string } = {
-                        yellow: "bg-yellow-500",
-                        pink: "bg-pink-500",
-                        green: "bg-green-500",
-                        purple: "bg-purple-500",
-                      };
-                      
-                      const categories = [
-                        {
-                          name: "Taste",
-                          total: categoryScores.taste,
-                          chris: individualScores.taste?.chris,
-                          anjuli: individualScores.taste?.anjuli,
-                          color: "yellow",
-                        },
-                        {
-                          name: "Appearance",
-                          total: categoryScores.appearance,
-                          chris: individualScores.appearance?.chris,
-                          anjuli: individualScores.appearance?.anjuli,
-                          color: "pink",
-                        },
-                        {
-                          name: "Effort",
-                          total: categoryScores.effort,
-                          chris: individualScores.effort?.chris,
-                          anjuli: individualScores.effort?.anjuli,
-                          color: "green",
-                        },
-                        {
-                          name: "Misc",
-                          total: categoryScores.misc,
-                          chris: individualScores.misc?.chris,
-                          anjuli: individualScores.misc?.anjuli,
-                          color: "purple",
-                        },
-                      ];
-                      
-                      return categories.map((category) => (
-                        <div key={category.name} className="border rounded-lg p-4 space-y-2">
-                          <div className="flex items-center gap-2">
-                            <div className={`w-3 h-3 rounded-full ${colorClasses[category.color]}`}></div>
-                            <h4 className="text-sm font-medium">{category.name}</h4>
-                                  </div>
-                                    <div className="space-y-1">
-                                      <div className="flex justify-between items-center">
-                              <span className="text-sm text-muted-foreground">Total</span>
-                              <span className="text-sm font-medium">
-                                {category.total ? category.total.toFixed(1) : '—'}
-                                        </span>
-                                      </div>
-                                      <div className="flex justify-between items-center">
-                              <span className="text-sm text-muted-foreground">Chris</span>
-                              <span className="text-sm">
-                                {category.chris ? category.chris.toFixed(1) : '—'}
-                                        </span>
-                                      </div>
-                                      <div className="flex justify-between items-center">
-                              <span className="text-sm text-muted-foreground">Anjuli</span>
-                              <span className="text-sm">
-                                {category.anjuli ? category.anjuli.toFixed(1) : '—'}
-                                        </span>
-                                      </div>
-                                    </div>
-                                  </div>
-                      ));
-                    })()}
-                  </div>
-                </div>
-              </div>
-            </>
-          )}
-        </DialogContent>
-      </Dialog>
+      </div>
     </>
   );
 } 
