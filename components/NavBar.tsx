@@ -100,7 +100,7 @@ export function NavBar({ hitLetters = new Set(), onLetterRef }: NavBarProps) {
     }, 1000)
 
     return () => clearInterval(interval)
-  }, [])
+  }, [colors.length])
 
   useEffect(() => {
     // Trigger dots animation on mount

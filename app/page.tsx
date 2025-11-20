@@ -6,6 +6,7 @@ import { PongGame } from "@/components/PongGame"
 import { WinDialog } from "@/components/WinDialog"
 import { GameOverDialog } from "@/components/GameOverDialog"
 import { useState, useEffect, useRef, useCallback } from "react"
+import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 import { collection, addDoc } from "firebase/firestore"
 import { db } from "@/lib/firebase"
@@ -20,6 +21,7 @@ interface LetterTarget {
 }
 
 export default function Home() {
+  const router = useRouter()
   const [hitLetters, setHitLetters] = useState<Set<string>>(new Set())
   const [letterTargets, setLetterTargets] = useState<LetterTarget[]>([])
   const letterRefsMap = useRef<Map<string, HTMLElement>>(new Map())
@@ -107,11 +109,9 @@ export default function Home() {
   }, [])
 
   const handleViewLeaderboard = useCallback(() => {
-    // TODO: Navigate to leaderboard page or show leaderboard
     setShowGameOverDialog(false)
-    // For now, just close the dialog
-    // You can add navigation here later
-  }, [])
+    router.push('/pong')
+  }, [router])
 
   const handleRefresh = useCallback(() => {
     window.location.reload()

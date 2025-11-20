@@ -25,7 +25,7 @@ interface PongGameProps {
 
 export function PongGame({ onLetterHit, letterTargets, allLettersHit, onGameStateChange, onLivesChange, onGameOver, gameTime = 0, lives = 3 }: PongGameProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const animationFrameRef = useRef<number>()
+  const animationFrameRef = useRef<number | undefined>(undefined)
   const gameStartTimeRef = useRef<number | null>(null)
   const gameStateRef = useRef({
     ballX: 0,
@@ -88,7 +88,7 @@ export function PongGame({ onLetterHit, letterTargets, allLettersHit, onGameStat
         cancelAnimationFrame(animationFrameRef.current)
       }
     }
-  }, [])
+  }, [onLivesChange])
 
   // Handle mouse/touch input for paddle
   const handlePointerMove = useCallback((clientX: number) => {
