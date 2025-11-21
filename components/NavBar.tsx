@@ -24,7 +24,7 @@ type SubCategory = {
 const mainCategories: MainCategory[] = [
   {
     id: 'about',
-    href: '/about',
+    href: '/about/career',
     color: 'blue',
     number: 1,
     subCategories: [
@@ -41,11 +41,11 @@ const mainCategories: MainCategory[] = [
   },
   {
     id: 'food',
-    href: '/food',
+    href: '/food/sunday-suppers',
     color: 'yellow',
     number: 3,
     subCategories: [
-      { id: 'dish-dish', label: 'Sunday Suppers', href: '/food/dish-dish' },
+      { id: 'sunday-suppers', label: 'Sunday Suppers', href: '/food/sunday-suppers' },
       { id: 'grounded', label: 'Grounded', href: '/food/grounded' },
       { id: 'recipes', label: 'Recipes', href: '/food/recipes' }
     ]
@@ -170,7 +170,17 @@ export function NavBar({ hitLetters = new Set(), onLetterRef }: NavBarProps) {
     <div className="w-full sticky top-0 bg-transparent transition-all duration-300 z-50">
         <div className="flex items-start justify-between transition-all duration-300 py-4">
         {/* Left: Corner dot with name */}
-        <Link href="/" className="flex items-center gap-2 group">
+        <Link 
+          href="/" 
+          className="flex items-center gap-2 group"
+          style={{
+            WebkitTapHighlightColor: 'transparent'
+          } as React.CSSProperties}
+          onTouchEnd={(e) => {
+            // Blur the link after touch to prevent persistent focus state on mobile
+            (e.currentTarget as HTMLElement).blur()
+          }}
+        >
           <div
             ref={(el) => onLetterRef?.("gucduck-dot", el)}
             data-letter-id="gucduck-dot"
@@ -219,7 +229,12 @@ export function NavBar({ hitLetters = new Set(), onLetterRef }: NavBarProps) {
                      }`}
                      style={{
                        transitionDelay: `${animationDelay}ms`,
-                       transitionTimingFunction: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)'
+                       transitionTimingFunction: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
+                       WebkitTapHighlightColor: 'transparent'
+                     } as React.CSSProperties}
+                     onTouchEnd={(e) => {
+                       // Blur the link after touch to prevent persistent focus state on mobile
+                       (e.currentTarget as HTMLElement).blur()
                      }}
                    >
                      <div
@@ -277,6 +292,13 @@ export function NavBar({ hitLetters = new Set(), onLetterRef }: NavBarProps) {
                         key={subCategory.id}
                         href={subCategory.href}
                         className="group transition-all duration-200"
+                        style={{
+                          WebkitTapHighlightColor: 'transparent'
+                        } as React.CSSProperties}
+                        onTouchEnd={(e) => {
+                          // Blur the link after touch to prevent persistent focus state on mobile
+                          (e.currentTarget as HTMLElement).blur()
+                        }}
                       >
                          <div className={`text-xs font-medium tracking-wide transition-all duration-200 px-1 py-1 ${
                            isSubActive 

@@ -118,6 +118,15 @@
   body {
     @apply bg-background text-foreground;
   }
+  /* Remove tap highlight on mobile and prevent persistent focus states */
+  a {
+    -webkit-tap-highlight-color: transparent;
+    tap-highlight-color: transparent;
+  }
+  /* Only show focus styles for keyboard navigation, not touch */
+  a:focus:not(:focus-visible) {
+    outline: none;
+  }
 }
 
 @keyframes duck-wade {
