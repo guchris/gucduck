@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect, useRef } from "react"
 import {
   Dialog,
   DialogContent,
@@ -21,15 +21,33 @@ interface WinDialogProps {
 }
 
 export function WinDialog({ open, onOpenChange, onSubmit, duration, lives }: WinDialogProps) {
-  const [name, setName] = useState("")
+  const [name, setName] = useState("anon")
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  // Select all text when dialog opens
+  useEffect(() => {
+    if (open && inputRef.current) {
+      // Small delay to ensure the input is focused first
+      setTimeout(() => {
+        inputRef.current?.select()
+      }, 100)
+    }
+  }, [open])
 
   const handleSubmit = () => {
     if (name.trim()) {
       onSubmit(name.trim())
-      setName("")
+      setName("anon")
       onOpenChange(false)
     }
   }
+
+  // Reset to "anon" when dialog closes
+  useEffect(() => {
+    if (!open) {
+      setName("anon")
+    }
+  }, [open])
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -46,6 +64,7 @@ export function WinDialog({ open, onOpenChange, onSubmit, duration, lives }: Win
               Name
             </label>
             <Input
+              ref={inputRef}
               id="name"
               placeholder="Enter your name"
               value={name}
