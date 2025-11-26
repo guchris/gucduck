@@ -23,7 +23,7 @@ import {
 } from "@tanstack/react-table";
 
 // Lucide Imports
-import { ArrowUpDown } from "lucide-react";
+import { ArrowUpDown, ChevronLeft, ChevronRight } from "lucide-react";
 
 // UI Components
 import { Button } from "@/components/ui/button";
@@ -35,6 +35,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 type DishScores = {
   [category: string]: { [index: string]: number };
@@ -110,15 +116,15 @@ const columns: ColumnDef<Dish>[] = [
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="h-8 px-2 text-foreground"
+          className="h-8 px-2 text-foreground text-xs"
         >
           Name
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          <ArrowUpDown className="!h-3 !w-3" />
         </Button>
       );
     },
     cell: ({ row }) => (
-      <div className="font-medium">{row.getValue("name")}</div>
+      <div className="font-medium text-xs">{row.getValue("name")}</div>
     ),
   },
   {
@@ -128,14 +134,14 @@ const columns: ColumnDef<Dish>[] = [
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="h-8 px-2 text-foreground"
+          className="h-8 px-2 text-foreground text-xs"
         >
           Date
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          <ArrowUpDown className="!h-3 !w-3" />
         </Button>
       );
     },
-    cell: ({ row }) => <div>{formatDate(row.getValue("date"))}</div>,
+    cell: ({ row }) => <div className="text-xs">{formatDate(row.getValue("date"))}</div>,
     sortingFn: (rowA, rowB) => {
       const a = rowA.getValue("date") as string;
       const b = rowB.getValue("date") as string;
@@ -154,16 +160,16 @@ const columns: ColumnDef<Dish>[] = [
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="h-8 px-2 text-foreground"
+          className="h-8 px-2 text-foreground text-xs"
         >
           Total
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          <ArrowUpDown className="!h-3 !w-3" />
         </Button>
       );
     },
     cell: ({ row }) => {
       const score = sumScores(row.original.scores);
-      return <div className="font-medium">{score.toFixed(1)}</div>;
+      return <div className="font-medium text-xs">{score.toFixed(1)}</div>;
     },
   },
   {
@@ -172,11 +178,11 @@ const columns: ColumnDef<Dish>[] = [
       const categoryScores = getCategoryScores(row.scores);
       return categoryScores.taste || 0;
     },
-    header: () => <div className="text-foreground">Taste</div>,
+    header: () => <div className="text-foreground text-xs">Taste</div>,
     cell: ({ row }) => {
       const categoryScores = getCategoryScores(row.original.scores);
       return (
-        <div className="font-medium">
+        <div className="font-medium text-xs">
           {categoryScores.taste ? categoryScores.taste.toFixed(1) : '—'}
         </div>
       );
@@ -191,11 +197,11 @@ const columns: ColumnDef<Dish>[] = [
       const categoryScores = getCategoryScores(row.scores);
       return categoryScores.appearance || 0;
     },
-    header: () => <div className="text-foreground">App</div>,
+    header: () => <div className="text-foreground text-xs">App</div>,
     cell: ({ row }) => {
       const categoryScores = getCategoryScores(row.original.scores);
       return (
-        <div className="font-medium">
+        <div className="font-medium text-xs">
           {categoryScores.appearance ? categoryScores.appearance.toFixed(1) : '—'}
         </div>
       );
@@ -210,11 +216,11 @@ const columns: ColumnDef<Dish>[] = [
       const categoryScores = getCategoryScores(row.scores);
       return categoryScores.effort || 0;
     },
-    header: () => <div className="text-foreground">Effort</div>,
+    header: () => <div className="text-foreground text-xs">Effort</div>,
     cell: ({ row }) => {
       const categoryScores = getCategoryScores(row.original.scores);
       return (
-        <div className="font-medium">
+        <div className="font-medium text-xs">
           {categoryScores.effort ? categoryScores.effort.toFixed(1) : '—'}
         </div>
       );
@@ -229,11 +235,11 @@ const columns: ColumnDef<Dish>[] = [
       const categoryScores = getCategoryScores(row.scores);
       return categoryScores.misc || 0;
     },
-    header: () => <div className="text-foreground">Misc</div>,
+    header: () => <div className="text-foreground text-xs">Misc</div>,
     cell: ({ row }) => {
       const categoryScores = getCategoryScores(row.original.scores);
       return (
-        <div className="font-medium">
+        <div className="font-medium text-xs">
           {categoryScores.misc ? categoryScores.misc.toFixed(1) : '—'}
         </div>
       );
@@ -248,6 +254,7 @@ export default function DishDishPage() {
   // State for fetched dishes and loading indicator
   const [dishes, setDishes] = useState<Dish[]>([]);
   const [loading, setLoading] = useState(true);
+  const [expandedRow, setExpandedRow] = useState<string | null>(null);
   const [sorting, setSorting] = useState<SortingState>([
     {
       id: "date",
@@ -294,24 +301,66 @@ export default function DishDishPage() {
         <div className="w-full px-6">
           <NavBar />
           
-          <main className="flex-1 pt-6">
+          <main className="flex-1 pt-6 space-y-8">
 
             {/* Hero Section */}
-            <div className="mb-12">
+            <div>
               <div className="space-y-4">
                 <p className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">
-                  Sunday Suppers is me and my best friend Anjuli's favorite tradition. Every so often, we pick a recipe from social media, split the grocery list, and meet up at my place to cook, catch up, and laugh about everything and nothing. It's not just about the food (though that part's great) - it's our way of making time for each other. We always snap pics of our creations, eat way too much, and then rate the dish like we're judges on a cooking show.
+                  Sunday Suppers is a favorite tradition of mine with my best friend Anjuli. Every so often, we pick a recipe from social media, split the grocery list, and meet up at my place to cook, catch up, and laugh about everything and nothing. It's not just about the food (though that part's great) - it's our way of making time for each other. We always snap pics of our creations, eat way too much, and then rate the dish like we're judges on a cooking show.
                 </p>
               </div>
+            </div>
+
+            {/* Scoring System Accordion */}
+            <div>
+              <Accordion type="single" collapsible className="w-full">
+                <AccordionItem value="scoring-system" className="border-b-0 border rounded-lg px-4">
+                  <AccordionTrigger className="font-semibold text-xs">Scoring System</AccordionTrigger>
+                  <AccordionContent>
+                    <div className="space-y-4">
+                      <p className="text-xs text-gray-600 dark:text-gray-400">
+                        A dish's score is derived from the combined points assigned by both Anjuli and me in the following categories.
+                      </p>
+                      <div className="space-y-3">
+                        <div>
+                          <div className="font-medium mb-1">Taste (10 pts)</div>
+                          <p className="text-xs text-gray-600 dark:text-gray-400">
+                            The overall flavor profile and how enjoyable the dish is. Does the food taste good? Does the dish come together?
+                          </p>
+                        </div>
+                        <div>
+                          <div className="font-medium mb-1">Appearance (5 pts)</div>
+                          <p className="text-xs text-gray-600 dark:text-gray-400">
+                            The visual appeal and arrangement of the dish. Is the food Instagram-worthy? Does the dish come together?
+                          </p>
+                        </div>
+                        <div>
+                          <div className="font-medium mb-1">Effort (5 pts)</div>
+                          <p className="text-xs text-gray-600 dark:text-gray-400">
+                            The dedication and skill required in preparing the dish. How long did the dish demand? How labor-intensive or intricate was the process?
+                          </p>
+                        </div>
+                        <div>
+                          <div className="font-medium mb-1">Misc (5 pts)</div>
+                          <p className="text-xs text-gray-600 dark:text-gray-400">
+                            The memorability and creativity of the dish. Is the food made in a creative way? Is it a unique cooking experience?
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
             </div>
 
             {/* Dishes Table */}
             <div>
               
             {loading ? (
-                <div className="text-center py-4 text-sm text-muted-foreground">Loading...</div>
+                <div className="text-center py-4 text-xs text-muted-foreground">Loading...</div>
               ) : dishes.length === 0 ? (
-                <div className="text-center py-4 text-sm text-muted-foreground">No dishes found.</div>
+                <div className="text-center py-4 text-xs text-muted-foreground">No dishes found.</div>
               ) : (
                 <div className="w-full">
                   <div className="rounded-md border">
@@ -323,7 +372,7 @@ export default function DishDishPage() {
                     return (
                                 <TableHead 
                                   key={header.id}
-                                  className={(header.column.columnDef.meta as { className?: string } | undefined)?.className}
+                                  className={`pl-0 ${(header.column.columnDef.meta as { className?: string } | undefined)?.className || ''}`}
                                 >
                                   {header.isPlaceholder
                                     ? null
@@ -339,29 +388,76 @@ export default function DishDishPage() {
                       </TableHeader>
                       <TableBody>
                         {table.getRowModel().rows?.length ? (
-                          table.getRowModel().rows.map((row) => (
-                            <TableRow
-                              key={row.id}
-                              data-state={row.getIsSelected() && "selected"}
-                            >
-                              {row.getVisibleCells().map((cell) => (
-                                <TableCell 
-                                  key={cell.id}
-                                  className={(cell.column.columnDef.meta as { className?: string } | undefined)?.className}
+                          table.getRowModel().rows.map((row) => {
+                            const isExpanded = expandedRow === row.id;
+                            const dish = row.original;
+                            const individualScores = getIndividualScores(dish.scores);
+                            const categories = ['taste', 'appearance', 'effort', 'misc'];
+                            
+                            return (
+                              <>
+                                <TableRow
+                                  key={row.id}
+                                  data-state={row.getIsSelected() && "selected"}
+                                  onClick={() => setExpandedRow(isExpanded ? null : row.id)}
+                                  className="cursor-pointer"
                                 >
-                                  {flexRender(
-                                    cell.column.columnDef.cell,
-                                    cell.getContext()
-                                  )}
-                                </TableCell>
-                              ))}
-                            </TableRow>
-                          ))
+                                  {row.getVisibleCells().map((cell) => (
+                                    <TableCell 
+                                      key={cell.id}
+                                      className={(cell.column.columnDef.meta as { className?: string } | undefined)?.className}
+                                    >
+                                      {flexRender(
+                                        cell.column.columnDef.cell,
+                                        cell.getContext()
+                                      )}
+                                    </TableCell>
+                                  ))}
+                                </TableRow>
+                                {isExpanded && (
+                                  <TableRow key={`${row.id}-expanded`}>
+                                    <TableCell colSpan={columns.length} className="bg-muted/30">
+                                      <div className="py-2 px-2">
+                                        <div className="flex gap-4">
+                                          {dish.images && dish.images.length > 0 && (
+                                            <div className="flex-shrink-0">
+                                              <img 
+                                                src={dish.images[0]} 
+                                                alt={dish.name}
+                                                className="w-32 h-32 object-cover rounded"
+                                              />
+                                            </div>
+                                          )}
+                                          <div className="space-y-1 flex-1">
+                                            {categories.map((category) => {
+                                              const scores = individualScores[category];
+                                              const categoryName = category.charAt(0).toUpperCase() + category.slice(1);
+                                              const chrisScore = scores?.chris !== null && scores?.chris !== undefined ? scores.chris.toFixed(1) : null;
+                                              const anjuliScore = scores?.anjuli !== null && scores?.anjuli !== undefined ? scores.anjuli.toFixed(1) : null;
+                                              const scoreArray = [chrisScore, anjuliScore].filter(score => score !== null);
+                                              const scoreString = scoreArray.length > 0 ? `[${scoreArray.join(', ')}]` : '[—, —]';
+                                              
+                                              return (
+                                                <div key={category} className="text-xs font-mono">
+                                                  <span className="inline-block w-24 text-left">{categoryName}</span>
+                                                  <span className="ml-4">{scoreString}</span>
+                                                </div>
+                                              );
+                                            })}
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </TableCell>
+                                  </TableRow>
+                                )}
+                              </>
+                            );
+                          })
                         ) : (
                           <TableRow>
                             <TableCell
                               colSpan={columns.length}
-                              className="h-24 text-center"
+                              className="h-24 text-center text-xs"
                             >
                               No results.
                             </TableCell>
@@ -377,7 +473,7 @@ export default function DishDishPage() {
                       onClick={() => table.previousPage()}
                       disabled={!table.getCanPreviousPage()}
                     >
-                      Previous
+                      <ChevronLeft className="!h-3 !w-3" />
                     </Button>
                     <Button
                       variant="outline"
@@ -385,7 +481,7 @@ export default function DishDishPage() {
                       onClick={() => table.nextPage()}
                       disabled={!table.getCanNextPage()}
                     >
-                      Next
+                      <ChevronRight className="!h-3 !w-3" />
                     </Button>
                   </div>
                 </div>

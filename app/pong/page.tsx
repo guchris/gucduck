@@ -22,6 +22,9 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
+// Lucide Imports
+import { ChevronLeft, ChevronRight } from "lucide-react";
+
 // UI Components
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
@@ -77,29 +80,29 @@ function rankSort(a: PongScore, b: PongScore): number {
 const columns: ColumnDef<PongScore>[] = [
   {
     id: "rank",
-    header: () => <div className="text-foreground">Rank</div>,
+    header: () => <div className="text-foreground text-xs">Rank</div>,
     cell: ({ row, table }) => {
       // Calculate rank based on current sorting
       const sortedRows = table.getSortedRowModel().rows;
       const currentIndex = sortedRows.findIndex(r => r.id === row.id);
       const rank = currentIndex >= 0 ? currentIndex + 1 : '-';
-      return <div className="font-medium">{rank}</div>;
+      return <div className="font-medium text-xs">{rank}</div>;
     },
     enableSorting: false,
   },
   {
     accessorKey: "name",
-    header: () => <div className="text-foreground">Name</div>,
+    header: () => <div className="text-foreground text-xs">Name</div>,
     cell: ({ row }) => (
-      <div className="font-medium">{row.getValue("name")}</div>
+      <div className="font-medium text-xs">{row.getValue("name")}</div>
     ),
   },
   {
     accessorKey: "duration",
-    header: () => <div className="text-foreground">Duration</div>,
+    header: () => <div className="text-foreground text-xs">Duration</div>,
     cell: ({ row }) => {
       const duration = row.getValue("duration") as number;
-      return <div className="font-medium">{duration.toFixed(2)}s</div>;
+      return <div className="font-medium text-xs">{duration.toFixed(2)}s</div>;
     },
     sortingFn: (rowA, rowB) => {
       const a = rowA.getValue("duration") as number;
@@ -113,18 +116,18 @@ const columns: ColumnDef<PongScore>[] = [
   },
   {
     accessorKey: "lives",
-    header: () => <div className="text-foreground">Lives</div>,
+    header: () => <div className="text-foreground text-xs">Lives</div>,
     cell: ({ row }) => {
       const lives = row.getValue("lives") as number;
-      return <div className="font-medium">{lives}</div>;
+      return <div className="font-medium text-xs">{lives}</div>;
     },
   },
   {
     accessorKey: "timestamp",
-    header: () => <div className="text-foreground">Date</div>,
+    header: () => <div className="text-foreground text-xs">Date</div>,
     cell: ({ row }) => {
       const timestamp = row.getValue("timestamp") as string;
-      return <div>{formatTimestamp(timestamp)}</div>;
+      return <div className="text-xs">{formatTimestamp(timestamp)}</div>;
     },
     sortingFn: (rowA, rowB) => {
       const a = rowA.getValue("timestamp") as string;
@@ -212,7 +215,7 @@ export default function PongLeaderboardPage() {
                   <Spinner className="size-6" />
                 </div>
               ) : scores.length === 0 ? (
-                <div className="text-center py-4 text-sm text-muted-foreground">No scores found.</div>
+                <div className="text-center py-4 text-xs text-muted-foreground">No scores found.</div>
               ) : (
                 <div className="w-full">
                   <div className="rounded-md border">
@@ -224,7 +227,7 @@ export default function PongLeaderboardPage() {
                               return (
                                 <TableHead 
                                   key={header.id}
-                                  className={(header.column.columnDef.meta as { className?: string } | undefined)?.className}
+                                  className={`${(header.column.columnDef.meta as { className?: string } | undefined)?.className || ''}`}
                                 >
                                   {header.isPlaceholder
                                     ? null
@@ -262,7 +265,7 @@ export default function PongLeaderboardPage() {
                           <TableRow>
                             <TableCell
                               colSpan={columns.length}
-                              className="h-24 text-center"
+                              className="h-24 text-center text-xs"
                             >
                               No results.
                             </TableCell>
@@ -278,7 +281,7 @@ export default function PongLeaderboardPage() {
                       onClick={() => table.previousPage()}
                       disabled={!table.getCanPreviousPage()}
                     >
-                      Previous
+                      <ChevronLeft className="!h-3 !w-3" />
                     </Button>
                     <Button
                       variant="outline"
@@ -286,7 +289,7 @@ export default function PongLeaderboardPage() {
                       onClick={() => table.nextPage()}
                       disabled={!table.getCanNextPage()}
                     >
-                      Next
+                      <ChevronRight className="!h-3 !w-3" />
                     </Button>
                   </div>
                 </div>

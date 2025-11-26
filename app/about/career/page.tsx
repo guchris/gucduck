@@ -14,11 +14,6 @@ const careerData = [
     type: "Full-time",
     color: "blue",
     description: "Driving AI research, enablement, and community initiatives across the software builder experience.",
-    achievements: [
-      "Achieved XX% weekly AI tool adoption (+27% QoQ) across Amazon by creating and delivering an AI playbook to 1,200+ Software Development Managers through documentation and workshops",
-      "Drove strategic AI investment decisions across all of Amazon through monthly research program, analyzing 15,000+ engineers' sentiment and usage patterns across the AI tools portfolio",
-      "Architected personalized knowledge-sharing platform strategy to transform builder content discovery, validating approach through multi-phase research and ecosystem engagement analysis"
-    ]
   },
   {
     id: 2,

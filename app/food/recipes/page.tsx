@@ -19,16 +19,6 @@ export default function RecipesPage() {
                 </p>
               </div>
             </div>
-
-            {/* Placeholder Content */}
-            <div className="space-y-8">
-              <div className="border border-dashed border-gray-300 dark:border-gray-600 p-8 text-center">
-                <h3 className="text-sm font-medium text-gray-900 dark:text-white mb-2">Coming Soon</h3>
-                <p className="text-xs text-gray-600 dark:text-gray-400">
-                  Step-by-step recipes with photos and cooking tips will be added here.
-                </p>
-              </div>
-            </div>
           </main>
         </div>
       </div>
