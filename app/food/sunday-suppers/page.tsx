@@ -324,25 +324,25 @@ export default function DishDishPage() {
                       </p>
                       <div className="space-y-3">
                         <div>
-                          <div className="font-medium mb-1">Taste (10 pts)</div>
+                          <div className="text-xs font-medium mb-1">Taste (10 pts)</div>
                           <p className="text-xs text-gray-600 dark:text-gray-400">
                             The overall flavor profile and how enjoyable the dish is. Does the food taste good? Does the dish come together?
                           </p>
                         </div>
                         <div>
-                          <div className="font-medium mb-1">Appearance (5 pts)</div>
+                          <div className="text-xs font-medium mb-1">Appearance (5 pts)</div>
                           <p className="text-xs text-gray-600 dark:text-gray-400">
                             The visual appeal and arrangement of the dish. Is the food Instagram-worthy? Does the dish come together?
                           </p>
                         </div>
                         <div>
-                          <div className="font-medium mb-1">Effort (5 pts)</div>
+                          <div className="text-xs font-medium mb-1">Effort (5 pts)</div>
                           <p className="text-xs text-gray-600 dark:text-gray-400">
                             The dedication and skill required in preparing the dish. How long did the dish demand? How labor-intensive or intricate was the process?
                           </p>
                         </div>
                         <div>
-                          <div className="font-medium mb-1">Misc (5 pts)</div>
+                          <div className="text-xs font-medium mb-1">Misc (5 pts)</div>
                           <p className="text-xs text-gray-600 dark:text-gray-400">
                             The memorability and creativity of the dish. Is the food made in a creative way? Is it a unique cooking experience?
                           </p>
@@ -395,9 +395,8 @@ export default function DishDishPage() {
                             const categories = ['taste', 'appearance', 'effort', 'misc'];
                             
                             return (
-                              <>
+                              <React.Fragment key={row.id}>
                                 <TableRow
-                                  key={row.id}
                                   data-state={row.getIsSelected() && "selected"}
                                   onClick={() => setExpandedRow(isExpanded ? null : row.id)}
                                   className="cursor-pointer"
@@ -450,7 +449,7 @@ export default function DishDishPage() {
                                     </TableCell>
                                   </TableRow>
                                 )}
-                              </>
+                              </React.Fragment>
                             );
                           })
                         ) : (
